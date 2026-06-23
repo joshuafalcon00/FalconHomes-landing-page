@@ -165,6 +165,13 @@
     .theme-toggle .icon-sun { display: none; }
     [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
     [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+    .nav-toggle { display: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; align-items: center; justify-content: center; }
+    .nav-toggle:hover { border-color: var(--primary); }
+    .nav-toggle svg { width: 22px; height: 22px; }
+    .nav-toggle .icon-x { display: none; }
+    .site.nav-open .nav-toggle .icon-bars { display: none; }
+    .site.nav-open .nav-toggle .icon-x { display: block; }
+    .menu-signin { display: none; }
 
     /* ============ HERO ============ */
     .hero {
@@ -352,7 +359,13 @@
 
     /* ============ RESPONSIVE ============ */
     @media (max-width: 940px) {
-      .menu { display: none; }
+      .nav-toggle { display: inline-flex; }
+      .nav-cta .login { display: none; }
+      .menu { position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--surface); border-bottom: 1px solid var(--line); box-shadow: 0 20px 32px rgba(20,40,30,0.18); padding: 6px 0; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.28s ease, opacity 0.2s ease; }
+      .site.nav-open .menu { max-height: 70vh; opacity: 1; visibility: visible; }
+      .menu a { display: block; padding: 14px 24px; font-size: 1rem; }
+      .menu a::after { display: none; }
+      .menu-signin { display: block; }
       .type-grid { grid-template-columns: repeat(2, 1fr); }
       .cards { grid-template-columns: repeat(2, 1fr); }
       .search { grid-template-columns: repeat(2, 1fr); }
@@ -387,20 +400,22 @@
     <div class="container nav">
       <a class="brand" href="#home"><img class="brand-logo" src="brand_assets/logo.png" alt="" /><span class="wordmark" aria-label="Falcon Homes"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></span></a>
       <nav>
-        <ul class="menu">
+        <ul class="menu" id="primaryMenu">
           <li><a href="#home">Home</a></li>
           <li><a href="#listings">Listings</a></li>
           <li><a href="#map">Lot Map</a></li>
           <li><a href="aboutfalco.html">About</a></li>
           <li><a href="inquire.html">Contact</a></li>
+          <li class="menu-signin"><a href="signin.html">Sign In</a></li>
         </ul>
       </nav>
       <div class="nav-cta">
+        <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primaryMenu"><svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg><svg class="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode">
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
         </button>
-        <a class="login" href="#contact">Sign In</a>
+        <a class="login" href="signin.html">Sign In</a>
         <a class="btn" href="#listings">View Listings</a>
       </div>
     </div>
@@ -710,12 +725,12 @@
         <div class="foot-col">
           <h4>Contact</h4>
           <p>Email: <a href="mailto:hello@falconhomes.com">hello@falconhomes.com</a></p>
-          <p>Phone: <a href="tel:+10000000000">+1 (000) 000-0000</a></p>
+          <p>Phone: <a href="tel:+14155550123">+1 (415) 555-0123</a></p>
           <p>Falcon Ridge, 123 Greenfield Ave</p>
         </div>
         <div class="foot-col">
           <h4>Follow Us</h4>
-          <div class="social"><a href="#">Facebook</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+          <div class="social"><a href="https://www.facebook.com/falconhomes" target="_blank" rel="noopener noreferrer">Facebook</a><a href="https://www.instagram.com/falconhomes" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.linkedin.com/company/falconhomes" target="_blank" rel="noopener noreferrer">LinkedIn</a></div>
         </div>
       </div>
       <div class="copyright">© 2026 Falcon Homes. All rights reserved.</div>
@@ -782,6 +797,55 @@
         var btn = card.querySelector('.pin-btn');
         if (btn) { btn.addEventListener('click', function () { select(card.getAttribute('data-lot'), mapSection); }); }
       });
+
+      /* Search bar: filter the listings by keyword / phase / style / bedrooms, then jump to them */
+      var searchForm = document.querySelector('form.search');
+      if (searchForm) {
+        searchForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var kw = (document.getElementById('kw').value || '').trim().toLowerCase();
+          var phase = document.getElementById('phase').value;
+          var style = document.getElementById('style').value;
+          var beds = document.getElementById('beds').value;
+          var minBeds = /\d/.test(beds) ? parseInt(beds, 10) : 0;
+          var shown = 0;
+          cards.forEach(function (c) {
+            var title = (c.getAttribute('data-title') || '').toLowerCase();
+            var loc = (c.getAttribute('data-loc') || '');
+            var specs = (c.getAttribute('data-specs') || '');
+            var m = specs.match(/(\d+)\s*Bed/i);
+            var cardBeds = m ? parseInt(m[1], 10) : 0;
+            var ok = true;
+            if (kw && title.indexOf(kw) === -1 && loc.toLowerCase().indexOf(kw) === -1) ok = false;
+            if (phase.indexOf('Any') === -1 && loc !== phase) ok = false;
+            if (style.indexOf('Any') === -1 && title.indexOf(style.toLowerCase()) === -1) ok = false;
+            if (minBeds && cardBeds < minBeds) ok = false;
+            c.style.display = ok ? '' : 'none';
+            if (ok) shown++;
+          });
+          if (shown === 0) { cards.forEach(function (c) { c.style.display = ''; }); }
+          document.getElementById('listings').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+    })();
+  </script>
+
+  <script>
+    /* Mobile nav dropdown toggle */
+    (function () {
+      var btn = document.getElementById('navToggle');
+      var hdr = document.querySelector('header.site');
+      var menu = document.getElementById('primaryMenu');
+      if (!btn || !hdr) return;
+      function close() { hdr.classList.remove('nav-open'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'Open menu'); }
+      btn.addEventListener('click', function () {
+        var open = hdr.classList.toggle('nav-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      });
+      if (menu) menu.addEventListener('click', function (e) { if (e.target.closest('a')) close(); });
+      window.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+      window.addEventListener('resize', function () { if (window.innerWidth > 940) close(); });
     })();
   </script>
 

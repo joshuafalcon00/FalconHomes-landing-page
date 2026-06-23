@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In · Falcon Homes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Marcellus&family=Outfit:wght@500;600;700&family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('fh-theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --primary: #1F7A52; --primary-bright: #2A9460; --primary-dark: #155C3E;
+      --bg: #FFFFFF; --surface: #FFFFFF; --soft: #F4F8F5; --soft-2: #EAF3EE;
+      --ink: #14241D; --muted: #5C6F66; --line: rgba(20,40,30,0.10);
+      --header-bg: rgba(255,255,255,0.92); --green-deep: #0B2A1E;
+      --glow: 0 4px 14px rgba(31,122,82,0.26); --glow-strong: 0 8px 24px rgba(31,122,82,0.40);
+      --font-head: "Poppins", "Segoe UI", system-ui, sans-serif;
+      --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    }
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --primary: #2E8A63; --primary-bright: #5CA585; --primary-dark: #246B4D;
+      --bg: #0F1311; --surface: #171D1A; --soft: #131816; --soft-2: #1C2420;
+      --ink: #ECF1EF; --muted: #9AA7A1; --line: rgba(255,255,255,0.12);
+      --header-bg: rgba(15,19,17,0.90); --green-deep: #0A0E0C;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--ink); background: var(--bg); line-height: 1.7; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; transition: background 0.3s ease, color 0.3s ease; min-height: 100vh; display: flex; flex-direction: column; }
+    h1, h2, h3 { font-family: var(--font-head); letter-spacing: -0.02em; line-height: 1.2; }
+    .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+    .fs { font-family: var(--font-display); font-style: italic; font-weight: 600; letter-spacing: -0.01em; font-size: 1.12em; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--primary); color: #fff; text-decoration: none; padding: 13px 26px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; border: none; cursor: pointer; box-shadow: var(--glow); min-height: 44px; transition: transform 0.18s ease, box-shadow 0.25s ease, background 0.2s ease; }
+    .btn:hover { background: var(--primary-bright); box-shadow: var(--glow-strong); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); box-shadow: var(--glow); }
+    .btn-ghost { background: var(--surface); color: var(--primary-dark); border: 1.5px solid rgba(31,122,82,0.32); box-shadow: 0 2px 10px rgba(31,122,82,0.10); }
+    [data-theme="dark"] .btn-ghost { color: var(--primary-bright); border-color: rgba(92,165,133,0.40); }
+    .btn-ghost:hover { background: var(--surface); color: var(--primary-dark); border-color: var(--primary); box-shadow: 0 6px 18px rgba(31,122,82,0.18); }
+    [data-theme="dark"] .btn-ghost:hover { color: var(--primary-bright); }
+    a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 6px; }
+
+    header.site { background: var(--header-bg); backdrop-filter: saturate(1.1) blur(8px); position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--line); transition: background 0.3s ease; }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 74px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-logo { width: 42px; height: 42px; object-fit: cover; object-position: left center; display: block; filter: drop-shadow(0 0 5px rgba(31,122,82,0.6)); }
+    [data-theme="dark"] .brand-logo { filter: drop-shadow(0 0 6px rgba(92,165,133,0.75)); }
+    .wordmark { display: inline-flex; align-items: baseline; gap: 0.1em; line-height: 1; white-space: nowrap; }
+    .wm-falcon { font-family: "Marcellus", Georgia, serif; font-weight: 400; letter-spacing: 0.02em; color: var(--ink); }
+    .wm-homes { font-family: "Outfit", var(--font-body); font-weight: 600; font-size: 1.32em; letter-spacing: -0.01em; color: var(--primary); }
+    [data-theme="dark"] .wm-homes { color: var(--primary-bright); }
+    .brand .wordmark { font-size: 1.5rem; }
+    .menu { display: flex; gap: 28px; list-style: none; }
+    .menu a { color: var(--ink); text-decoration: none; font-size: 0.92rem; font-weight: 500; position: relative; transition: color 0.2s ease; }
+    .menu a::after { content: ""; position: absolute; left: 0; bottom: -6px; height: 2px; width: 0; background: var(--primary); transition: width 0.22s ease; }
+    .menu a:hover { color: var(--primary); } .menu a:hover::after { width: 100%; }
+    .nav-cta { display: flex; align-items: center; gap: 16px; }
+    .nav-cta .login { color: var(--primary); text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+    .theme-toggle { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease; }
+    .theme-toggle:hover { border-color: var(--primary); box-shadow: 0 4px 14px rgba(31,122,82,0.18); transform: translateY(-1px); }
+    .theme-toggle svg { width: 20px; height: 20px; }
+    .theme-toggle .icon-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+    .nav-toggle { display: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; align-items: center; justify-content: center; }
+    .nav-toggle:hover { border-color: var(--primary); }
+    .nav-toggle svg { width: 22px; height: 22px; }
+    .nav-toggle .icon-x { display: none; }
+    .site.nav-open .nav-toggle .icon-bars { display: none; }
+    .site.nav-open .nav-toggle .icon-x { display: block; }
+    .menu-signin { display: none; }
+
+    .page { flex: 1 0 auto; }
+    .hero { text-align: center; padding: 72px 24px 8px; background: radial-gradient(90% 70% at 50% -10%, var(--soft-2) 0%, rgba(0,0,0,0) 60%), var(--bg); }
+    .hero .eyebrow { display: inline-block; font-size: 0.76rem; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-dark); background: var(--soft); border: 1px solid rgba(31,122,82,0.22); padding: 6px 16px; border-radius: 30px; margin-bottom: 20px; font-weight: 600; }
+    [data-theme="dark"] .hero .eyebrow { color: var(--primary-bright); }
+    .hero h1 { font-size: clamp(2rem, 5vw, 2.9rem); font-weight: 700; letter-spacing: -0.03em; color: var(--ink); }
+    .hero h1 .fs { color: var(--primary); } [data-theme="dark"] .hero h1 .fs { color: var(--primary-bright); }
+    .hero p { color: var(--muted); font-size: 1.08rem; max-width: 460px; margin: 16px auto 0; }
+
+    .auth-wrap { padding: 36px 24px 84px; }
+    .auth-card { max-width: 440px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 30px; box-shadow: 0 18px 42px rgba(20,40,30,0.10); }
+    .field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; }
+    .field label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; }
+    .field input { background: var(--bg); border: 1px solid var(--line); color: var(--ink); padding: 12px 13px; border-radius: 8px; font-size: 0.95rem; width: 100%; font-family: inherit; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+    .field input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(31,122,82,0.12); }
+    .field input::placeholder { color: #9bada4; }
+    .row { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 18px; font-size: 0.88rem; }
+    .remember { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); }
+    .remember input { width: 17px; height: 17px; accent-color: var(--primary); }
+    .link { color: var(--primary); text-decoration: none; font-weight: 600; }
+    [data-theme="dark"] .link { color: var(--primary-bright); }
+    .link:hover { text-decoration: underline; }
+    .auth-card .btn { width: 100%; padding: 14px; font-size: 1rem; }
+    .alt { text-align: center; color: var(--muted); font-size: 0.92rem; margin-top: 18px; }
+    .note { display: none; margin-top: 16px; padding: 14px 16px; border-radius: 10px; background: var(--soft); border: 1px solid rgba(31,122,82,0.2); color: var(--ink); font-size: 0.92rem; }
+    .note a { color: var(--primary); font-weight: 600; }
+    [data-theme="dark"] .note a { color: var(--primary-bright); }
+
+    .cta { text-align: center; padding: 0 24px 80px; }
+    .cta h2 { font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 600; color: var(--ink); }
+    .cta p { color: var(--muted); margin: 10px auto 22px; max-width: 460px; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    footer { background: var(--green-deep); color: #c0d4c9; padding: 60px 24px 30px; border-top: 3px solid var(--primary); flex-shrink: 0; }
+    .foot-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 36px; }
+    .foot-col { max-width: 280px; }
+    .foot-col h3 { color: #fff; font-size: 1.25rem; margin-bottom: 12px; }
+    .foot-col h3 .wm-falcon { color: #fff; } .foot-col h3 .wm-homes { color: #fff; }
+    .foot-col h4 { color: #fff; font-size: 0.95rem; margin-bottom: 12px; }
+    .foot-col p, .foot-col a { color: #acc6ba; text-decoration: none; font-size: 0.93rem; }
+    .foot-col p { margin-bottom: 9px; }
+    .foot-col a:hover { color: #fff; }
+    .social a { display: inline-block; margin-right: 14px; font-weight: 600; color: #fff; }
+    .social a:hover { color: var(--primary-bright); }
+    .copyright { border-top: 1px solid rgba(255,255,255,0.10); margin-top: 40px; padding-top: 22px; text-align: center; font-size: 0.86rem; color: #7e988b; }
+
+    @media (max-width: 940px) {
+      .nav-toggle { display: inline-flex; }
+      .nav-cta .login { display: none; }
+      .menu { position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--surface); border-bottom: 1px solid var(--line); box-shadow: 0 20px 32px rgba(20,40,30,0.18); padding: 6px 0; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.28s ease, opacity 0.2s ease; }
+      .site.nav-open .menu { max-height: 70vh; opacity: 1; visibility: visible; }
+      .menu a { display: block; padding: 14px 24px; font-size: 1rem; }
+      .menu a::after { display: none; }
+      .menu-signin { display: block; }
+    }
+    @media (max-width: 560px) { .container { padding: 0 18px; } .nav .login { display: none; } .brand .wordmark { display: none; } .nav { height: 64px; } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site">
+    <div class="container nav">
+      <a class="brand" href="index.html"><img class="brand-logo" src="brand_assets/logo.png" alt="" /><span class="wordmark" aria-label="Falcon Homes"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></span></a>
+      <nav>
+        <ul class="menu" id="primaryMenu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#listings">Listings</a></li>
+          <li><a href="index.html#map">Lot Map</a></li>
+          <li><a href="aboutfalco.html">About</a></li>
+          <li><a href="inquire.html">Contact</a></li>
+          <li class="menu-signin"><a href="signin.html" aria-current="page">Sign In</a></li>
+        </ul>
+      </nav>
+      <div class="nav-cta">
+        <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primaryMenu"><svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg><svg class="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+        <a class="login" href="signin.html" aria-current="page">Sign In</a>
+        <a class="btn" href="index.html#listings">View Listings</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="page">
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="container">
+        <span class="eyebrow">Welcome back</span>
+        <h1>Sign in to <span class="fs">Falcon Homes</span></h1>
+        <p>Access your saved homes and reservations at Falcon Ridge.</p>
+      </div>
+    </section>
+
+    <!-- ============ SIGN-IN FORM ============ -->
+    <section class="auth-wrap">
+      <form class="auth-card" id="signinForm" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@email.com" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Your password" required autocomplete="current-password" />
+        </div>
+        <div class="row">
+          <label class="remember"><input type="checkbox" id="remember" /> Remember me</label>
+          <a class="link" href="inquire.html">Forgot password?</a>
+        </div>
+        <button class="btn" type="submit">Sign in</button>
+        <p class="alt">New to Falcon Ridge? <a class="link" href="inquire.html">Inquire about a home</a></p>
+        <div class="note" id="signinNote">Accounts aren't open yet. To get started, <a href="inquire.html">send an inquiry</a> and an advisor will set you up.</div>
+      </form>
+    </section>
+
+    <!-- ============ CTA BACK HOME ============ -->
+    <section class="cta">
+      <div class="container">
+        <h2>Not signing in today?</h2>
+        <p>Head back to explore Falcon Ridge and the homes available now.</p>
+        <div class="cta-actions">
+          <a class="btn" href="index.html">Back to home</a>
+          <a class="btn btn-ghost" href="index.html#listings">Browse homes</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer id="contact">
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-col">
+          <h3><span class="wordmark"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></span></h3>
+          <p>Reliable homes for families ready to put down roots at Falcon Ridge, delivered at <span class="fs">Falcon Speed</span>. Your new home starts here.</p>
+        </div>
+        <div class="foot-col">
+          <h4>Contact</h4>
+          <p>Email: <a href="mailto:hello@falconhomes.com">hello@falconhomes.com</a></p>
+          <p>Phone: <a href="tel:+14155550123">+1 (415) 555-0123</a></p>
+          <p>Falcon Ridge, 123 Greenfield Ave</p>
+        </div>
+        <div class="foot-col">
+          <h4>Follow Us</h4>
+          <div class="social"><a href="https://www.facebook.com/falconhomes" target="_blank" rel="noopener noreferrer">Facebook</a><a href="https://www.instagram.com/falconhomes" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.linkedin.com/company/falconhomes" target="_blank" rel="noopener noreferrer">LinkedIn</a></div>
+        </div>
+      </div>
+      <div class="copyright">© 2026 Falcon Homes. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var toggle = document.getElementById('themeToggle');
+      if (toggle) toggle.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('fh-theme', next); } catch (e) {}
+      });
+      var form = document.getElementById('signinForm');
+      var note = document.getElementById('signinNote');
+      if (form) form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        note.style.display = 'block';
+        note.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    })();
+  </script>
+
+  <script>
+    /* Mobile nav dropdown toggle */
+    (function () {
+      var btn = document.getElementById('navToggle');
+      var hdr = document.querySelector('header.site');
+      var menu = document.getElementById('primaryMenu');
+      if (!btn || !hdr) return;
+      function close() { hdr.classList.remove('nav-open'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'Open menu'); }
+      btn.addEventListener('click', function () {
+        var open = hdr.classList.toggle('nav-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      });
+      if (menu) menu.addEventListener('click', function (e) { if (e.target.closest('a')) close(); });
+      window.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+      window.addEventListener('resize', function () { if (window.innerWidth > 940) close(); });
+    })();
+  </script>
+
+</body>
+</html>
