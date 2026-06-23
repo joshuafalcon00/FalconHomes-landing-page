@@ -3,367 +3,352 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Falcon Homes — Move In at Falcon Speed</title>
+  <title>Falcon Homes · Move In at Falcon Speed</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Marcellus&family=Outfit:wght@500;600;700&family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    /* Set theme before paint to avoid flash */
+    (function () {
+      try {
+        var saved = localStorage.getItem('fh-theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
   <style>
     :root {
-      /* Brand */
-      --primary: #1F7A52;        /* Falcon primary green */
+      color-scheme: light;
+      /* Brand — single accent: green (from brand assets) */
+      --primary: #1F7A52;
       --primary-bright: #2A9460;
       --primary-dark: #155C3E;
 
-      /* Accent — gold (suited to a premium property site) */
-      --gold: #C8A24A;
-      --gold-bright: #E0C172;
+      /* Neutrals — white dominant (light) */
+      --bg: #FFFFFF;
+      --surface: #FFFFFF;
+      --soft: #F4F8F5;
+      --soft-2: #EAF3EE;
+      --ink: #14241D;
+      --muted: #5C6F66;
+      --line: rgba(20,40,30,0.10);
+      --header-bg: rgba(255,255,255,0.92);
+      --green-deep: #0B2A1E;
 
-      /* Money green */
-      --mint: #7FE3AD;
+      /* Map tokens */
+      --map-bg: #D8EAB6;        /* grass: light yellow-green */
+      --road: #C6CAC6;          /* road: neutral gray */
+      --road-line: #F2C232;     /* center stripes: yellow */
+      --parcel: #FFFFFF;
+      --parcel-hover: #EAF6D2;
+      --tree: #8DC153;          /* trees: yellow-green */
+      --building: #FFFFFF;
 
-      /* Dark theme greens (deepened) */
-      --green-900: #051C14;      /* darkest bg */
-      --green-850: #07241A;
-      --green-800: #092A1E;      /* section bg */
-      --green-panel: #0D3527;    /* cards / panels on dark */
-      --line: rgba(255,255,255,0.08);
+      /* Prestige glow */
+      --glow: 0 4px 14px rgba(31,122,82,0.26);
+      --glow-strong: 0 8px 24px rgba(31,122,82,0.40);
 
-      --white: #FFFFFF;
-      --ink: #16241d;
-      --muted-dark: #8AA89A;     /* muted text on dark */
-      --muted-light: #5d6f66;    /* muted text on light */
-      --soft: #f3f7f4;
-
-      /* Type */
-      --font-head: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+      --font-head: "Poppins", "Segoe UI", system-ui, sans-serif;
       --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      /* Softened green accent (green + a hint of white) on neutral black/white grounds — not pure green */
+      --primary: #2E8A63;
+      --primary-bright: #5CA585;
+      --primary-dark: #246B4D;
+
+      --bg: #0F1311;            /* near-black, faint green undertone */
+      --surface: #171D1A;       /* elevated charcoal */
+      --soft: #131816;
+      --soft-2: #1C2420;
+      --ink: #ECF1EF;           /* near-white */
+      --muted: #9AA7A1;         /* neutral gray-green */
+      --line: rgba(255,255,255,0.12);
+      --header-bg: rgba(15,19,17,0.90);
+      --green-deep: #0A0E0C;    /* near-black footer */
+
+      --map-bg: #141A17;
+      --road: #232C28;
+      --road-line: rgba(242,194,50,0.50);
+      --parcel: #1B231F;
+      --parcel-hover: #25322B;
+      --tree: #3F7E5E;
+      --building: #232C28;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; background: var(--green-deep); }
     body {
       font-family: var(--font-body);
       color: var(--ink);
-      background: var(--white);
-      line-height: 1.6;
+      background: transparent;
+      line-height: 1.7;
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      transition: background 0.3s ease, color 0.3s ease;
     }
     h1, h2, h3, h4, .title, .price, .brand-name {
       font-family: var(--font-head);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
     }
     .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 24px; }
     a { color: inherit; }
+    .ico { width: 16px; height: 16px; flex-shrink: 0; }
+    /* Branded phrase "Falcon Speed" — distinct display serif */
+    .fs { font-family: var(--font-display); font-style: italic; font-weight: 600; letter-spacing: -0.01em; font-size: 1.12em; }
+    .hero h1 .fs { font-size: 1.2em; }
+
+    /* ---- Buttons (prestige glow) ---- */
     .btn {
-      display: inline-block;
-      background: var(--primary);
-      color: #fff;
-      text-decoration: none;
-      padding: 13px 28px;
-      border-radius: 7px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s ease, transform 0.05s ease;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--primary); color: #fff; text-decoration: none;
+      padding: 13px 26px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+      border: none; cursor: pointer; box-shadow: var(--glow); min-height: 44px;
+      transition: transform 0.18s ease, box-shadow 0.25s ease, background 0.2s ease;
     }
-    .btn:hover { background: var(--primary-bright); }
-    .btn:active { transform: translateY(1px); }
-    .btn-gold { background: var(--gold); color: #1c1305; }
-    .btn-gold:hover { background: var(--gold-bright); }
+    .btn:hover { background: var(--primary-bright); box-shadow: var(--glow-strong); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); box-shadow: var(--glow); }
+    .btn-ghost {
+      background: var(--surface); color: var(--primary-dark);
+      border: 1.5px solid rgba(31,122,82,0.32); box-shadow: 0 2px 10px rgba(31,122,82,0.10);
+    }
+    [data-theme="dark"] .btn-ghost { color: var(--primary-bright); border-color: rgba(92,165,133,0.40); }
+    .btn-ghost:hover { background: var(--surface); color: var(--primary-dark); border-color: var(--primary); box-shadow: 0 6px 18px rgba(31,122,82,0.18); }
+    [data-theme="dark"] .btn-ghost:hover { background: var(--surface); color: var(--primary-bright); }
+
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 6px;
+    }
 
     /* ============ HEADER ============ */
     header.site {
-      background: var(--green-900);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      border-bottom: 1px solid var(--line);
+      background: var(--header-bg); backdrop-filter: saturate(1.1) blur(8px);
+      position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--line);
+      transition: background 0.3s ease;
     }
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 74px;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      background: #fff;
-      padding: 7px 14px;
-      border-radius: 8px;
-    }
-    .brand img { height: 30px; width: auto; display: block; }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 74px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-logo { width: 42px; height: 42px; object-fit: cover; object-position: left center; display: block; filter: drop-shadow(0 0 5px rgba(31,122,82,0.6)); transition: filter 0.25s ease; }
+    .brand:hover .brand-logo { filter: drop-shadow(0 0 9px rgba(31,122,82,0.9)); }
+    [data-theme="dark"] .brand-logo { filter: drop-shadow(0 0 6px rgba(92,165,133,0.75)); }
+    [data-theme="dark"] .brand:hover .brand-logo { filter: drop-shadow(0 0 10px rgba(92,165,133,0.95)); }
+    /* Brand wordmark: two-font lockup, "Homes" larger */
+    .wordmark { display: inline-flex; align-items: baseline; gap: 0.1em; line-height: 1; white-space: nowrap; }
+    .wm-falcon { font-family: "Marcellus", Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: 0.02em; }
+    .wm-homes { font-family: "Outfit", var(--font-body); font-weight: 600; font-size: 1.32em; letter-spacing: -0.01em; }
+    .brand .wordmark { font-size: 1.5rem; }
+    .brand .wm-falcon { color: var(--ink); }
+    .brand .wm-homes { color: var(--primary); }
+    [data-theme="dark"] .brand .wm-homes { color: var(--primary-bright); }
     .menu { display: flex; gap: 28px; list-style: none; }
-    .menu a {
-      color: #cfe0d7;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 0.3px;
-      transition: color 0.2s ease;
+    .menu a { color: var(--ink); text-decoration: none; font-size: 0.92rem; font-weight: 500; position: relative; transition: color 0.2s ease; }
+    .menu a::after { content: ""; position: absolute; left: 0; bottom: -6px; height: 2px; width: 0; background: var(--primary); transition: width 0.22s ease; }
+    .menu a:hover { color: var(--primary); }
+    .menu a:hover::after { width: 100%; }
+    .nav-cta { display: flex; align-items: center; gap: 16px; }
+    .nav-cta .login { color: var(--ink); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .nav-cta .login:hover { color: var(--primary); }
+
+    .theme-toggle {
+      width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line);
+      background: var(--surface); color: var(--ink); cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
     }
-    .menu a:hover { color: var(--gold-bright); }
-    .nav-cta { display: flex; align-items: center; gap: 18px; }
-    .nav-cta .login { color: #c2d6cb; text-decoration: none; font-size: 0.9rem; font-weight: 500; }
-    .nav-cta .login:hover { color: #fff; }
+    .theme-toggle:hover { border-color: var(--primary); box-shadow: 0 4px 14px rgba(31,122,82,0.18); transform: translateY(-1px); }
+    .theme-toggle svg { width: 20px; height: 20px; }
+    .theme-toggle .icon-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
     /* ============ HERO ============ */
     .hero {
       position: relative;
-      background:
-        linear-gradient(180deg, rgba(4,20,14,0.86) 0%, rgba(4,18,12,0.95) 100%),
-        radial-gradient(120% 120% at 70% 0%, #134a35 0%, #0a2a1e 45%, #051c14 100%);
-      color: #fff;
-      text-align: center;
-      padding: 96px 24px 150px;
-      overflow: hidden;
+      background: radial-gradient(90% 70% at 50% -10%, var(--soft-2) 0%, rgba(0,0,0,0) 60%), var(--bg);
+      text-align: center; padding: 92px 24px 132px;
     }
-    /* rooftop skyline silhouette */
-    .hero::after {
-      content: "";
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      height: 120px;
-      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='120' viewBox='0 0 1200 120'><g fill='%23041109' fill-opacity='0.7'><path d='M0 120 V70 L60 70 L90 40 L120 70 L120 120 Z'/><path d='M160 120 V60 L160 40 L210 40 L210 60 L250 60 L250 120 Z'/><path d='M300 120 V50 L340 20 L380 50 L380 120 Z'/><path d='M430 120 V75 L430 55 L500 55 L500 75 L530 75 L530 120 Z'/><path d='M580 120 V45 L620 18 L660 45 L660 120 Z'/><path d='M710 120 V65 L710 45 L780 45 L780 120 Z'/><path d='M820 120 V52 L860 22 L900 52 L900 120 Z'/><path d='M950 120 V70 L950 50 L1020 50 L1020 70 L1050 70 L1050 120 Z'/><path d='M1100 120 V48 L1140 20 L1180 48 L1180 120 Z'/></g></svg>") repeat-x bottom center;
-      background-size: 1200px 120px;
-      pointer-events: none;
-    }
-    .hero .container { position: relative; z-index: 2; }
     .hero .eyebrow {
-      display: inline-block;
-      font-size: 0.78rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold-bright);
-      border: 1px solid rgba(224,193,114,0.4);
-      padding: 6px 16px;
-      border-radius: 30px;
-      margin-bottom: 22px;
+      display: inline-block; font-size: 0.76rem; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--primary-dark); background: var(--soft); border: 1px solid rgba(31,122,82,0.22);
+      padding: 6px 16px; border-radius: 30px; margin-bottom: 22px; font-weight: 600;
     }
-    .hero h1 {
-      font-size: 3.1rem;
-      line-height: 1.15;
-      letter-spacing: -0.5px;
-      max-width: 760px;
-      margin: 0 auto;
-    }
-    .hero h1 .hl { color: var(--gold); }
-    .hero p.sub {
-      font-size: 1.15rem;
-      color: #c4d8cd;
-      max-width: 640px;
-      margin: 18px auto 30px;
-    }
+    [data-theme="dark"] .hero .eyebrow { color: var(--primary-bright); border-color: rgba(92,165,133,0.30); }
+    .hero h1 { font-size: 3.3rem; font-weight: 700; line-height: 1.07; letter-spacing: -0.035em; max-width: 780px; margin: 0 auto; color: var(--ink); }
+    .hero h1 .hl { color: var(--primary); }
+    [data-theme="dark"] .hero h1 .hl { color: var(--primary-bright); }
+    .hero p.sub { font-size: 1.15rem; line-height: 1.65; color: var(--muted); max-width: 600px; margin: 20px auto 32px; }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* Hero background video — FIXED to the viewport so it stays put while content scrolls over it */
+    .hero--video { background: transparent; }
+    .hero-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+    .hero-overlay { position: fixed; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5,20,14,0.58) 0%, rgba(5,20,14,0.72) 100%); }
+    .hero.hero--video .container { position: relative; z-index: 1; }
+    .hero.hero--video .eyebrow { color: #fff; background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.38); }
+    .hero.hero--video h1 { color: #fff; }
+    .hero.hero--video h1 .hl { color: #8FE3B7; }
+    .hero.hero--video p.sub { color: rgba(255,255,255,0.92); }
+    .hero.hero--video .btn-ghost { background: rgba(255,255,255,0.14); color: #fff; border-color: rgba(255,255,255,0.5); }
+    .hero.hero--video .btn-ghost:hover { background: rgba(255,255,255,0.24); color: #fff; border-color: #fff; }
 
     /* ============ SEARCH BAR ============ */
-    .search-wrap {
-      position: relative;
-      z-index: 10;
-      margin-top: -78px;
-      margin-bottom: 70px;
-    }
+    .search-wrap { position: relative; z-index: 10; margin-top: -70px; margin-bottom: 72px; }
     .search {
-      background: var(--green-panel);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 26px;
-      box-shadow: 0 24px 50px rgba(0,0,0,0.45);
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
+      background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px;
+      box-shadow: 0 24px 50px rgba(20,40,30,0.10), 0 4px 14px rgba(31,122,82,0.06);
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
     }
     .field { display: flex; flex-direction: column; gap: 7px; }
-    .field label {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted-dark);
-    }
+    .field label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; }
     .field input, .field select {
-      background: #06281c;
-      border: 1px solid rgba(255,255,255,0.10);
-      color: #eaf3ee;
-      padding: 12px 13px;
-      border-radius: 7px;
-      font-size: 0.92rem;
-      width: 100%;
+      background: var(--bg); border: 1px solid var(--line); color: var(--ink);
+      padding: 12px 13px; border-radius: 8px; font-size: 0.92rem; width: 100%; font-family: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .field input::placeholder { color: #6f8a7d; }
+    .field input:focus, .field select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(31,122,82,0.12); }
+    .field input::placeholder { color: #9bada4; }
     .field select { appearance: none; cursor: pointer; }
     .search .search-btn { grid-column: span 4; }
     .search .search-btn .btn { width: 100%; padding: 15px; font-size: 1rem; }
 
-    /* ============ SECTION HEADINGS ============ */
-    .section-head { text-align: center; margin-bottom: 44px; }
-    .section-head h2 { font-size: 2rem; letter-spacing: -0.3px; }
-    .section-head p { color: var(--muted-light); margin-top: 8px; }
-    .on-dark .section-head h2 { color: #fff; }
-    .on-dark .section-head p { color: var(--muted-dark); }
-    .section-head .kicker {
-      display: inline-block;
-      color: var(--gold);
-      font-size: 0.76rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
+    /* ============ SECTIONS ============ */
+    section { padding: 84px 24px; }
+    .bg-soft { background: transparent; }
+    .section-head { text-align: center; margin-bottom: 46px; }
+    .section-head h2 { font-family: var(--font-display); font-style: normal; font-size: 2.15rem; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
+    .section-head p { color: var(--muted); margin-top: 10px; }
+    .section-head .kicker { display: inline-block; color: var(--primary); font-size: 1rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
+    [data-theme="dark"] .section-head .kicker { color: var(--primary-bright); }
 
-    /* ============ BROWSE BY TYPE ============ */
-    .browse { background: var(--green-850); color: #fff; padding: 80px 24px; }
-    .type-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px 40px;
-    }
-    .type-grid a {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      text-decoration: none;
-      color: #cfe2d8;
-      padding: 12px 4px;
-      border-bottom: 1px solid var(--line);
-      font-size: 0.95rem;
-      transition: color 0.2s ease, padding-left 0.2s ease;
-    }
-    .type-grid a:hover { color: var(--gold-bright); padding-left: 8px; }
-    .type-grid .count {
-      background: var(--gold);
-      color: #1c1305;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 2px 9px;
-      border-radius: 20px;
-    }
-
-    /* ============ FEATURED LISTINGS ============ */
-    .featured { background: var(--green-800); color: #fff; padding: 80px 24px; }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 26px;
-    }
+    /* ============ LISTINGS ============ */
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
     .card {
-      background: var(--green-panel);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+      box-shadow: 0 1px 2px rgba(20,40,30,0.04);
+      transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.3s ease;
     }
-    .card:hover { transform: translateY(-5px); box-shadow: 0 18px 38px rgba(0,0,0,0.5); }
-    .card .photo {
-      position: relative;
-      height: 190px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .card .photo svg { width: 64px; height: 64px; opacity: 0.9; }
-    /* darker, muted gradient placeholders */
-    .card:nth-child(1) .photo { background: linear-gradient(135deg, #14422f, #082015); }
-    .card:nth-child(2) .photo { background: linear-gradient(135deg, #1c4a36, #0a261a); }
-    .card:nth-child(3) .photo { background: linear-gradient(135deg, #2a4030, #0f2317); }
-    .card:nth-child(4) .photo { background: linear-gradient(135deg, #3a3a22, #1c1d10); }
-    .card:nth-child(5) .photo { background: linear-gradient(135deg, #123d2c, #071d14); }
-    .card:nth-child(6) .photo { background: linear-gradient(135deg, #234436, #0c241a); }
-    .badge {
-      position: absolute;
-      top: 14px; left: 14px;
-      background: var(--gold);
-      color: #1c1305;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      padding: 5px 12px;
-      border-radius: 5px;
-    }
-    .badge.style {
-      left: auto; right: 14px;
-      background: rgba(0,0,0,0.45);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.25);
-    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 20px 42px rgba(31,122,82,0.16), 0 4px 12px rgba(20,40,30,0.08); }
+    .card.is-active { box-shadow: 0 0 0 2px var(--primary), 0 20px 42px rgba(31,122,82,0.22); transform: translateY(-6px); }
+    .card .photo { position: relative; height: 188px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--soft-2), var(--soft)); overflow: hidden; }
+    .card .photo .card-photo-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .card .photo svg { width: 60px; height: 60px; opacity: 0.75; stroke: var(--primary-bright); }
+    .lot-no { position: absolute; top: 14px; left: 14px; width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: #fff; font-family: var(--font-head); font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--glow); }
+    .badge-style { position: absolute; top: 16px; right: 14px; background: var(--surface); color: var(--ink); font-size: 0.72rem; font-weight: 600; padding: 5px 12px; border-radius: 6px; border: 1px solid var(--line); }
     .card .body { padding: 20px; }
-    .card .title { font-size: 1.12rem; font-weight: 600; color: #fff; }
-    .card .loc { color: var(--muted-dark); font-size: 0.88rem; margin-top: 4px; }
-    .card .price {
-      color: var(--mint);
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-top: 14px;
-    }
-    .specs {
-      display: flex;
-      gap: 18px;
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid var(--line);
-      color: #b9d0c5;
-      font-size: 0.85rem;
-    }
+    .card .title { font-size: 1.12rem; font-weight: 600; color: var(--ink); }
+    .card .loc { color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
+    .card .price { color: var(--primary); font-size: 1.32rem; font-weight: 700; margin-top: 14px; font-variant-numeric: tabular-nums; }
+    [data-theme="dark"] .card .price { color: var(--primary-bright); }
+    .specs { display: flex; gap: 16px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
     .specs span { display: flex; align-items: center; gap: 6px; }
+    .pin-btn {
+      margin-top: 16px; width: 100%; background: var(--soft); color: var(--primary-dark);
+      border: 1.5px solid rgba(31,122,82,0.28); border-radius: 8px; padding: 12px; min-height: 44px;
+      font-family: inherit; font-weight: 600; font-size: 0.88rem;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+    }
+    [data-theme="dark"] .pin-btn { color: var(--primary-bright); }
+    .pin-btn:hover { background: var(--surface); border-color: var(--primary); box-shadow: 0 4px 14px rgba(31,122,82,0.16); }
+    .card.is-active .pin-btn { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .inquire-btn { width: 100%; margin-top: 10px; }
+
+    /* ============ LOT MAP ============ */
+    .map-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 32px; align-items: start; }
+    .map-frame { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; box-shadow: 0 18px 42px rgba(20,40,30,0.08); }
+    .lotmap { width: 100%; height: auto; display: block; border-radius: 10px; }
+    .map-canvas { fill: var(--map-bg); }
+    .land-edge { fill: none; stroke: rgba(31,122,82,0.40); stroke-width: 2; stroke-dasharray: 7 7; }
+    .road-base { fill: none; stroke: var(--road); stroke-linecap: round; stroke-linejoin: round; stroke-width: 30; }
+    .road-base.thin { stroke-width: 20; }
+    .road-line { fill: none; stroke: var(--road-line); stroke-width: 2.5; stroke-dasharray: 10 13; stroke-linecap: round; }
+    .tree { fill: var(--tree); }
+    .tree.alt { fill: var(--primary); opacity: 0.30; }
+    .parcel { fill: none; stroke: var(--primary); stroke-width: 2; transition: stroke 0.2s ease; }
+    .lot-badge-bg { fill: var(--primary); stroke: #fff; stroke-width: 1.5; }
+    .lot-house { fill: none; stroke: var(--primary); stroke-width: 1.6; }
+    [data-theme="dark"] .lot-house { stroke: var(--primary-bright); }
+    .lot { cursor: pointer; transition: filter 0.2s ease; }
+    .lot:hover { filter: drop-shadow(0 0 10px rgba(31,122,82,0.6)); }
+    .lot:hover .parcel { stroke: var(--primary-bright); stroke-width: 2.5; }
+    .lot:focus-visible { outline: none; }
+    .lot:focus-visible { filter: drop-shadow(0 0 10px rgba(31,122,82,0.7)); }
+    .lot.is-active { filter: drop-shadow(0 6px 14px rgba(31,122,82,0.6)); }
+    .lot.is-active .parcel { stroke: var(--primary); stroke-width: 4; }
+    .lot .lot-num { fill: #fff; font-family: var(--font-head); font-weight: 700; font-size: 15px; }
+    [data-theme="dark"] .lot .lot-num { fill: #fff; }
+    .lot.is-active .lot-num { fill: #fff; }
+    .lot .lot-tag { fill: var(--muted); font-family: var(--font-body); font-weight: 600; font-size: 10px; letter-spacing: 1.5px; }
+    .lot.is-active .lot-tag { fill: rgba(255,255,255,0.85); }
+    .lot.is-active .lot-house { stroke: #fff; }
+    .map-legend { fill: var(--muted); font-family: var(--font-body); font-size: 11px; letter-spacing: 1.5px; }
+
+    .map-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 26px; box-shadow: 0 10px 30px rgba(20,40,30,0.06); min-height: 300px; }
+    .panel-hint { color: var(--muted); display: flex; gap: 12px; align-items: flex-start; }
+    .panel-hint .ico { width: 26px; height: 26px; color: var(--primary); margin-top: 2px; }
+    .panel-card .pc-lot { display: inline-flex; align-items: center; gap: 7px; background: var(--soft); color: var(--primary-dark); border: 1px solid rgba(31,122,82,0.2); font-weight: 600; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 30px; margin-bottom: 16px; }
+    [data-theme="dark"] .panel-card .pc-lot { color: var(--primary-bright); }
+    .panel-card .pc-lot .ico { width: 14px; height: 14px; }
+    .panel-card h3 { font-size: 1.5rem; color: var(--ink); }
+    .panel-card .pc-loc { color: var(--muted); margin: 4px 0 14px; }
+    .panel-card .pc-price { font-family: var(--font-head); font-weight: 700; font-size: 1.7rem; color: var(--primary); font-variant-numeric: tabular-nums; }
+    [data-theme="dark"] .panel-card .pc-price { color: var(--primary-bright); }
+    .panel-card .pc-specs { color: var(--muted); font-size: 0.9rem; margin-top: 6px; }
+    .panel-card .btn { margin-top: 20px; }
+
+    /* ============ BROWSE BY STYLE ============ */
+    .type-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 40px; }
+    .type-grid a { display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--ink); padding: 13px 4px; border-bottom: 1px solid var(--line); font-size: 0.95rem; transition: color 0.2s ease, transform 0.2s ease; }
+    .type-grid a:hover { color: var(--primary); transform: translateX(8px); }
+    .type-grid a:active { transform: translateX(4px); }
+    .type-grid .count { background: var(--primary); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 2px 9px; border-radius: 20px; }
 
     /* ============ ABOUT ============ */
-    .about { padding: 88px 24px; background: #fff; }
-    .about-grid {
-      display: grid;
-      grid-template-columns: 0.95fr 1.05fr;
-      gap: 56px;
-      align-items: center;
-    }
-    .about-logo {
-      background: var(--soft);
-      border: 1px solid #e4ece7;
-      border-radius: 16px;
-      padding: 54px;
-      text-align: center;
-    }
-    .about-logo img { width: 280px; max-width: 100%; height: auto; }
-    .about h2 { font-size: 2rem; color: var(--primary); margin-bottom: 16px; letter-spacing: -0.3px; }
-    .about p { color: var(--muted-light); font-size: 1.05rem; margin-bottom: 16px; }
+    .about-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 56px; align-items: center; }
+    .about-logo { background: transparent; border: none; padding: 0; box-shadow: none; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .about-mark { width: 128px; height: 128px; object-fit: cover; object-position: left center; border-radius: 20px; filter: drop-shadow(0 0 16px rgba(31,122,82,0.55)); }
+    .about-wordmark { font-size: 2.7rem; line-height: 1; }
+    .about-wordmark .wm-falcon { color: #fff; }
+    .about-wordmark .wm-homes { color: #8FE3B7; }
+    .about h2 { font-family: var(--font-display); font-style: normal; font-size: 2.15rem; font-weight: 600; color: var(--primary); margin-bottom: 16px; letter-spacing: -0.005em; }
+    [data-theme="dark"] .about h2 { color: var(--primary-bright); }
+    .about p { color: var(--muted); font-size: 1.05rem; line-height: 1.75; margin-bottom: 16px; }
     .points { list-style: none; margin-top: 10px; }
     .points li { position: relative; padding-left: 30px; margin-bottom: 12px; color: var(--ink); }
-    .points li::before {
-      content: "✓";
-      position: absolute; left: 0; top: 0;
-      color: #fff;
-      background: var(--primary);
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      font-size: 0.72rem;
-      display: flex; align-items: center; justify-content: center;
-    }
+    .points li::before { content: "✓"; position: absolute; left: 0; top: 4px; color: #fff; background: var(--primary); width: 20px; height: 20px; border-radius: 50%; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; }
 
     /* ============ FOOTER ============ */
-    footer {
-      background: var(--green-900);
-      color: #c0d4c9;
-      padding: 60px 24px 30px;
-      border-top: 3px solid var(--gold);
-    }
+    footer { background: var(--green-deep); color: #c0d4c9; padding: 60px 24px 30px; border-top: 3px solid var(--primary); }
     .foot-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 36px; }
     .foot-col { max-width: 280px; }
     .foot-col h3 { color: #fff; font-size: 1.25rem; margin-bottom: 12px; }
-    .foot-col h4 { color: #fff; font-size: 0.95rem; margin-bottom: 12px; letter-spacing: 0.5px; }
+    .foot-col h3 .wm-falcon { color: #fff; }
+    .foot-col h3 .wm-homes { color: #fff; }
+    .foot-col h4 { color: #fff; font-size: 0.95rem; margin-bottom: 12px; }
     .foot-col p, .foot-col a { color: #acc6ba; text-decoration: none; font-size: 0.93rem; }
     .foot-col p { margin-bottom: 9px; }
-    .foot-col a:hover { color: var(--gold-bright); }
-    .social a {
-      display: inline-block;
-      margin-right: 14px;
-      font-weight: 600;
-      color: #fff;
-    }
-    .social a:hover { color: var(--gold-bright); }
-    .copyright {
-      border-top: 1px solid var(--line);
-      margin-top: 40px;
-      padding-top: 22px;
-      text-align: center;
-      font-size: 0.86rem;
-      color: #7e988b;
-    }
+    .foot-col a:hover { color: #fff; }
+    .social a { display: inline-block; margin-right: 14px; font-weight: 600; color: #fff; }
+    .social a:hover { color: var(--primary-bright); }
+    .copyright { border-top: 1px solid rgba(255,255,255,0.10); margin-top: 40px; padding-top: 22px; text-align: center; font-size: 0.86rem; color: #7e988b; }
+
+    /* Page content sits over the fixed video the whole way down — keep on-section text legible */
+    .section-head h2 { color: #fff; }
+    .section-head p { color: rgba(255,255,255,0.92); }
+    .section-head .kicker { color: #8FE3B7; }
+    .type-grid a { color: #fff; border-bottom-color: rgba(255,255,255,0.18); }
+    .type-grid a:hover { color: #8FE3B7; }
+    .about h2 { color: #8FE3B7; }
+    .about p { color: rgba(255,255,255,0.92); }
+    .points li { color: #fff; }
+    /* About Falcon Homes section over the video: white glowing heading + clearer description */
+    #about h2 { color: #fff; text-shadow: 0 0 12px rgba(255,255,255,0.35); }
+    #about p { color: rgba(255,255,255,0.95); }
 
     /* ============ RESPONSIVE ============ */
     @media (max-width: 940px) {
@@ -373,12 +358,25 @@
       .search { grid-template-columns: repeat(2, 1fr); }
       .search .search-btn { grid-column: span 2; }
       .about-grid { grid-template-columns: 1fr; gap: 36px; }
+      .map-grid { grid-template-columns: 1fr; gap: 22px; }
     }
     @media (max-width: 560px) {
-      .hero h1 { font-size: 2.1rem; }
+      .hero h1 { font-size: 2.2rem; }
       .cards { grid-template-columns: 1fr; }
       .search { grid-template-columns: 1fr; }
       .search .search-btn { grid-column: span 1; }
+      .type-grid { grid-template-columns: 1fr; gap: 0; }
+      .container { padding: 0 18px; }
+      section { padding: 64px 0; }
+      .about-logo { padding: 36px; }
+      .nav-cta .login { display: none; }
+      .brand .wordmark { display: none; }
+      .nav .btn { padding: 11px 16px; font-size: 0.88rem; }
+      .nav { height: 64px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     }
   </style>
 </head>
@@ -387,17 +385,21 @@
   <!-- ============ HEADER ============ -->
   <header class="site">
     <div class="container nav">
-      <a class="brand" href="#"><img src="brand_assets/logo.png" alt="Falcon Homes" /></a>
+      <a class="brand" href="#home"><img class="brand-logo" src="brand_assets/logo.png" alt="" /><span class="wordmark" aria-label="Falcon Homes"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></span></a>
       <nav>
         <ul class="menu">
           <li><a href="#home">Home</a></li>
           <li><a href="#listings">Listings</a></li>
-          <li><a href="#types">House Styles</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#map">Lot Map</a></li>
+          <li><a href="aboutfalco.html">About</a></li>
+          <li><a href="inquire.html">Contact</a></li>
         </ul>
       </nav>
       <div class="nav-cta">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
         <a class="login" href="#contact">Sign In</a>
         <a class="btn" href="#listings">View Listings</a>
       </div>
@@ -405,12 +407,22 @@
   </header>
 
   <!-- ============ HERO ============ -->
-  <section class="hero" id="home">
+  <section class="hero hero--video" id="home">
+    <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+      <source src="brand_assets/VIDEO.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay"></div>
     <div class="container">
       <span class="eyebrow">Falcon Ridge · Modern Housing Community</span>
-      <h1>Move into your new home at <span class="hl">falcon speed</span></h1>
-      <p class="sub">Swift, seamless, and reliable — Falcon Homes gets your family into a move-in ready home faster, without ever compromising on quality.</p>
-      <a class="btn btn-gold" href="#listings">Browse Homes at Falcon Ridge</a>
+      <h1>Move into your new home at <span class="hl fs">Falcon Speed</span></h1>
+      <p class="sub">Swift, seamless, and reliable. Falcon Homes gets your family into a move-in ready home faster, without ever compromising on quality.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#listings">Browse Homes at Falcon Ridge</a>
+        <a class="btn btn-ghost" href="#map">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          View the Lot Map
+        </a>
+      </div>
     </div>
   </section>
 
@@ -423,152 +435,213 @@
       </div>
       <div class="field">
         <label for="phase">Phase</label>
-        <select id="phase">
-          <option>Any phase</option>
-          <option>Falcon Ridge · Phase 1</option>
-          <option>Falcon Ridge · Phase 2</option>
-          <option>Falcon Ridge · Phase 3</option>
-        </select>
+        <select id="phase"><option>Any phase</option><option>Falcon Ridge · Phase 1</option><option>Falcon Ridge · Phase 2</option><option>Falcon Ridge · Phase 3</option></select>
       </div>
       <div class="field">
         <label for="style">House Style</label>
-        <select id="style">
-          <option>Any style</option>
-          <option>Modern Minimalist</option>
-          <option>Classic Bungalow</option>
-          <option>Two-Storey</option>
-          <option>Mediterranean</option>
-          <option>Craftsman</option>
-          <option>Contemporary Townhouse</option>
-        </select>
+        <select id="style"><option>Any style</option><option>Modern Minimalist</option><option>Classic Bungalow</option><option>Two-Storey</option><option>Mediterranean</option><option>Craftsman</option><option>Contemporary Townhouse</option></select>
       </div>
       <div class="field">
         <label for="beds">Bedrooms</label>
-        <select id="beds">
-          <option>Any</option>
-          <option>1+</option>
-          <option>2+</option>
-          <option>3+</option>
-          <option>4+</option>
-        </select>
+        <select id="beds"><option>Any</option><option>1+</option><option>2+</option><option>3+</option><option>4+</option></select>
       </div>
-      <div class="search-btn">
-        <button class="btn btn-gold" type="submit">Search Homes</button>
-      </div>
+      <div class="search-btn"><button class="btn" type="submit">Search Homes</button></div>
     </form>
   </div>
 
-  <!-- ============ FEATURED LISTINGS ============ -->
-  <section class="featured" id="listings">
+  <!-- ============ LISTINGS ============ -->
+  <section id="listings">
     <div class="container">
       <div class="section-head">
         <span class="kicker">All Within Falcon Ridge</span>
-        <h2 style="color:#fff;">Home Styles for Sale</h2>
-        <p style="color:var(--muted-dark);">Same trusted community — six distinct house styles to suit your family.</p>
+        <h2>Home Styles for Sale</h2>
+        <p>Same trusted community of six distinct house styles. Each home's number matches its lot on the map below.</p>
       </div>
       <div class="cards">
-        <!-- Card 1 -->
-        <article class="card">
-          <div class="photo">
-            <span class="badge">For Sale</span>
-            <span class="badge style">Modern Minimalist</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+        <article class="card" data-lot="1" data-title="The Aspen · Modern Minimalist" data-loc="Falcon Ridge · Phase 1" data-price="$248,000" data-specs="3 Beds · 2 Baths · 140 m²">
+          <div class="photo"><img class="card-photo-img" src="images/aspen.jpg" alt="The Aspen, Modern Minimalist home, front view" /><span class="lot-no">1</span><span class="badge-style">Modern Minimalist</span>
           </div>
           <div class="body">
-            <div class="title">The Aspen — Modern Minimalist</div>
+            <div class="title">The Aspen · Modern Minimalist</div>
             <div class="loc">Falcon Ridge · Phase 1</div>
             <div class="price">$248,000</div>
-            <div class="specs">
-              <span>🛏 3 Beds</span><span>🛁 2 Baths</span><span>📐 140 m²</span>
-            </div>
+            <div class="specs"><span>🛏 3 Beds</span><span>🛁 2 Baths</span><span>📐 140 m²</span></div>
+            <button class="pin-btn" type="button" data-lot="1"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg> Show Lot 1 on map</button>
+            <a class="btn inquire-btn" href="inquire.html?lot=1">Inquire about this home</a>
           </div>
         </article>
-        <!-- Card 2 -->
-        <article class="card">
-          <div class="photo">
-            <span class="badge">For Sale</span>
-            <span class="badge style">Classic Bungalow</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+        <article class="card" data-lot="2" data-title="The Willow · Classic Bungalow" data-loc="Falcon Ridge · Phase 1" data-price="$212,000" data-specs="2 Beds · 1 Bath · 110 m²">
+          <div class="photo"><img class="card-photo-img" src="images/willow.jpg" alt="The Willow, Classic Bungalow home, front view" /><span class="lot-no">2</span><span class="badge-style">Classic Bungalow</span>
           </div>
           <div class="body">
-            <div class="title">The Willow — Classic Bungalow</div>
+            <div class="title">The Willow · Classic Bungalow</div>
             <div class="loc">Falcon Ridge · Phase 1</div>
             <div class="price">$212,000</div>
-            <div class="specs">
-              <span>🛏 2 Beds</span><span>🛁 1 Bath</span><span>📐 110 m²</span>
-            </div>
+            <div class="specs"><span>🛏 2 Beds</span><span>🛁 1 Bath</span><span>📐 110 m²</span></div>
+            <button class="pin-btn" type="button" data-lot="2"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg> Show Lot 2 on map</button>
+            <a class="btn inquire-btn" href="inquire.html?lot=2">Inquire about this home</a>
           </div>
         </article>
-        <!-- Card 3 -->
-        <article class="card">
-          <div class="photo">
-            <span class="badge">For Sale</span>
-            <span class="badge style">Two-Storey</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+        <article class="card" data-lot="3" data-title="The Magnolia · Two-Storey" data-loc="Falcon Ridge · Phase 2" data-price="$365,000" data-specs="4 Beds · 3 Baths · 210 m²">
+          <div class="photo"><img class="card-photo-img" src="images/magnolia.jpg" alt="The Magnolia, Two-Storey home, front view" /><span class="lot-no">3</span><span class="badge-style">Two-Storey</span>
           </div>
           <div class="body">
-            <div class="title">The Magnolia — Two-Storey</div>
+            <div class="title">The Magnolia · Two-Storey</div>
             <div class="loc">Falcon Ridge · Phase 2</div>
             <div class="price">$365,000</div>
-            <div class="specs">
-              <span>🛏 4 Beds</span><span>🛁 3 Baths</span><span>📐 210 m²</span>
-            </div>
+            <div class="specs"><span>🛏 4 Beds</span><span>🛁 3 Baths</span><span>📐 210 m²</span></div>
+            <button class="pin-btn" type="button" data-lot="3"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg> Show Lot 3 on map</button>
+            <a class="btn inquire-btn" href="inquire.html?lot=3">Inquire about this home</a>
           </div>
         </article>
-        <!-- Card 4 -->
-        <article class="card">
-          <div class="photo">
-            <span class="badge">For Sale</span>
-            <span class="badge style">Mediterranean</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+        <article class="card" data-lot="4" data-title="The Sienna · Mediterranean Villa" data-loc="Falcon Ridge · Phase 2" data-price="$412,000" data-specs="4 Beds · 3 Baths · 240 m²">
+          <div class="photo"><img class="card-photo-img" src="images/sienna.jpg" alt="The Sienna, Mediterranean Villa, front view" /><span class="lot-no">4</span><span class="badge-style">Mediterranean</span>
           </div>
           <div class="body">
-            <div class="title">The Sienna — Mediterranean Villa</div>
+            <div class="title">The Sienna · Mediterranean Villa</div>
             <div class="loc">Falcon Ridge · Phase 2</div>
             <div class="price">$412,000</div>
-            <div class="specs">
-              <span>🛏 4 Beds</span><span>🛁 3 Baths</span><span>📐 240 m²</span>
-            </div>
+            <div class="specs"><span>🛏 4 Beds</span><span>🛁 3 Baths</span><span>📐 240 m²</span></div>
+            <button class="pin-btn" type="button" data-lot="4"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg> Show Lot 4 on map</button>
+            <a class="btn inquire-btn" href="inquire.html?lot=4">Inquire about this home</a>
           </div>
         </article>
-        <!-- Card 5 -->
-        <article class="card">
-          <div class="photo">
-            <span class="badge">For Sale</span>
-            <span class="badge style">Craftsman</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+        <article class="card" data-lot="5" data-title="The Cedar · Craftsman Cottage" data-loc="Falcon Ridge · Phase 3" data-price="$276,500" data-specs="3 Beds · 2 Baths · 155 m²">
+          <div class="photo"><img class="card-photo-img" src="images/cedar.jpg" alt="The Cedar, Craftsman Cottage, front view" /><span class="lot-no">5</span><span class="badge-style">Craftsman</span>
           </div>
           <div class="body">
-            <div class="title">The Cedar — Craftsman Cottage</div>
+            <div class="title">The Cedar · Craftsman Cottage</div>
             <div class="loc">Falcon Ridge · Phase 3</div>
             <div class="price">$276,500</div>
-            <div class="specs">
-              <span>🛏 3 Beds</span><span>🛁 2 Baths</span><span>📐 155 m²</span>
-            </div>
+            <div class="specs"><span>🛏 3 Beds</span><span>🛁 2 Baths</span><span>📐 155 m²</span></div>
+            <button class="pin-btn" type="button" data-lot="5"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg> Show Lot 5 on map</button>
+            <a class="btn inquire-btn" href="inquire.html?lot=5">Inquire about this home</a>
           </div>
         </article>
-        <!-- Card 6 -->
-        <article class="card">
-          <div class="photo">
-            <span class="badge">For Sale</span>
-            <span class="badge style">Townhouse</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+        <article class="card" data-lot="6" data-title="The Linden · Contemporary Townhouse" data-loc="Falcon Ridge · Phase 3" data-price="$224,000" data-specs="3 Beds · 2 Baths · 130 m²">
+          <div class="photo"><img class="card-photo-img" src="images/linden.jpg" alt="The Linden, Contemporary Townhouse, front view" /><span class="lot-no">6</span><span class="badge-style">Townhouse</span>
           </div>
           <div class="body">
-            <div class="title">The Linden — Contemporary Townhouse</div>
+            <div class="title">The Linden · Contemporary Townhouse</div>
             <div class="loc">Falcon Ridge · Phase 3</div>
             <div class="price">$224,000</div>
-            <div class="specs">
-              <span>🛏 3 Beds</span><span>🛁 2 Baths</span><span>📐 130 m²</span>
-            </div>
+            <div class="specs"><span>🛏 3 Beds</span><span>🛁 2 Baths</span><span>📐 130 m²</span></div>
+            <button class="pin-btn" type="button" data-lot="6"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg> Show Lot 6 on map</button>
+            <a class="btn inquire-btn" href="inquire.html?lot=6">Inquire about this home</a>
           </div>
         </article>
       </div>
     </div>
   </section>
 
+  <!-- ============ LOT MAP ============ -->
+  <section class="bg-soft" id="map">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Falcon Ridge · Site Plan</span>
+        <h2>Find Your Lot</h2>
+        <p>A portion of the Falcon Ridge community. Hover a lot to see it glow, then tap to highlight its land, or use “Show on map” on any home above.</p>
+      </div>
+      <div class="map-grid">
+        <div class="map-frame">
+          <svg class="lotmap" viewBox="0 0 720 460" role="group" aria-label="Falcon Ridge lot map">
+            <rect class="map-canvas" x="0" y="0" width="720" height="460" rx="10" />
+            <rect class="land-edge" x="12" y="12" width="696" height="436" rx="12" />
+
+            <!-- Roads (curved, master-plan style) -->
+            <path class="road-base" d="M -10,150 C 130,90 250,200 380,170 C 500,142 600,150 730,205" />
+            <path class="road-base" d="M -10,345 C 150,315 250,410 400,365 C 540,322 620,405 730,335" />
+            <path class="road-base thin" d="M 305,182 C 300,250 320,300 388,360" />
+            <path class="road-base thin" d="M 600,150 C 622,225 600,295 560,360" />
+            <path class="road-line" d="M -10,150 C 130,90 250,200 380,170 C 500,142 600,150 730,205" />
+            <path class="road-line" d="M -10,345 C 150,315 250,410 400,365 C 540,322 620,405 730,335" />
+
+            <!-- Landscaping / trees -->
+            <g aria-hidden="true">
+              <circle class="tree" cx="205" cy="120" r="11"/><circle class="tree alt" cx="222" cy="132" r="8"/><circle class="tree" cx="190" cy="138" r="7"/>
+              <circle class="tree" cx="445" cy="118" r="10"/><circle class="tree" cx="462" cy="108" r="7"/><circle class="tree alt" cx="478" cy="124" r="8"/>
+              <circle class="tree" cx="658" cy="120" r="10"/><circle class="tree alt" cx="675" cy="132" r="7"/><circle class="tree" cx="690" cy="118" r="6"/>
+              <circle class="tree" cx="24" cy="120" r="9"/><circle class="tree alt" cx="30" cy="150" r="6"/>
+              <circle class="tree" cx="250" cy="300" r="12"/><circle class="tree alt" cx="268" cy="312" r="8"/><circle class="tree" cx="234" cy="312" r="7"/>
+              <circle class="tree" cx="500" cy="300" r="11"/><circle class="tree" cx="516" cy="290" r="7"/><circle class="tree alt" cx="486" cy="312" r="8"/>
+              <circle class="tree" cx="60" cy="250" r="10"/><circle class="tree alt" cx="46" cy="262" r="7"/><circle class="tree" cx="78" cy="262" r="6"/>
+              <circle class="tree" cx="680" cy="270" r="10"/><circle class="tree" cx="664" cy="258" r="7"/><circle class="tree alt" cx="694" cy="258" r="6"/>
+              <circle class="tree" cx="360" cy="430" r="10"/><circle class="tree alt" cx="378" cy="436" r="7"/><circle class="tree" cx="344" cy="438" r="6"/>
+              <circle class="tree" cx="120" cy="220" r="8"/><circle class="tree" cx="300" cy="210" r="9"/><circle class="tree alt" cx="600" cy="215" r="8"/>
+              <circle class="tree" cx="408" cy="300" r="8"/><circle class="tree" cx="150" cy="322" r="7"/><circle class="tree alt" cx="620" cy="322" r="7"/>
+            </g>
+
+            <!-- LOT 1 -->
+            <g class="lot" data-lot="1" role="button" tabindex="0" aria-label="Lot 1 · The Aspen, Modern Minimalist">
+              <title>Lot 1 · The Aspen</title>
+              <clipPath id="lotclip1"><rect x="44" y="34" width="128" height="80" rx="10"/></clipPath>
+              <image href="images/aspen.jpg" x="44" y="34" width="128" height="80" preserveAspectRatio="xMidYMid slice" clip-path="url(#lotclip1)"/>
+              <rect class="parcel" x="44" y="34" width="128" height="80" rx="10" fill="none"/>
+              <circle class="lot-badge-bg" cx="62" cy="52" r="13"/>
+              <text class="lot-num" x="62" y="52" text-anchor="middle" dominant-baseline="central">1</text>
+            </g>
+            <!-- LOT 2 -->
+            <g class="lot" data-lot="2" role="button" tabindex="0" aria-label="Lot 2 · The Willow, Classic Bungalow">
+              <title>Lot 2 · The Willow</title>
+              <clipPath id="lotclip2"><rect x="248" y="40" width="126" height="78" rx="10"/></clipPath>
+              <image href="images/willow.jpg" x="248" y="40" width="126" height="78" preserveAspectRatio="xMidYMid slice" clip-path="url(#lotclip2)"/>
+              <rect class="parcel" x="248" y="40" width="126" height="78" rx="10" fill="none"/>
+              <circle class="lot-badge-bg" cx="266" cy="58" r="13"/>
+              <text class="lot-num" x="266" y="58" text-anchor="middle" dominant-baseline="central">2</text>
+            </g>
+            <!-- LOT 3 -->
+            <g class="lot" data-lot="3" role="button" tabindex="0" aria-label="Lot 3 · The Magnolia, Two-Storey">
+              <title>Lot 3 · The Magnolia</title>
+              <clipPath id="lotclip3"><rect x="516" y="36" width="130" height="80" rx="10"/></clipPath>
+              <image href="images/magnolia.jpg" x="516" y="36" width="130" height="80" preserveAspectRatio="xMidYMid slice" clip-path="url(#lotclip3)"/>
+              <rect class="parcel" x="516" y="36" width="130" height="80" rx="10" fill="none"/>
+              <circle class="lot-badge-bg" cx="534" cy="54" r="13"/>
+              <text class="lot-num" x="534" y="54" text-anchor="middle" dominant-baseline="central">3</text>
+            </g>
+            <!-- LOT 4 -->
+            <g class="lot" data-lot="4" role="button" tabindex="0" aria-label="Lot 4 · The Sienna, Mediterranean Villa">
+              <title>Lot 4 · The Sienna</title>
+              <clipPath id="lotclip4"><rect x="60" y="366" width="128" height="78" rx="10"/></clipPath>
+              <image href="images/sienna.jpg" x="60" y="366" width="128" height="78" preserveAspectRatio="xMidYMid slice" clip-path="url(#lotclip4)"/>
+              <rect class="parcel" x="60" y="366" width="128" height="78" rx="10" fill="none"/>
+              <circle class="lot-badge-bg" cx="78" cy="384" r="13"/>
+              <text class="lot-num" x="78" y="384" text-anchor="middle" dominant-baseline="central">4</text>
+            </g>
+            <!-- LOT 5 -->
+            <g class="lot" data-lot="5" role="button" tabindex="0" aria-label="Lot 5 · The Cedar, Craftsman Cottage">
+              <title>Lot 5 · The Cedar</title>
+              <clipPath id="lotclip5"><rect x="316" y="372" width="128" height="74" rx="10"/></clipPath>
+              <image href="images/cedar.jpg" x="316" y="372" width="128" height="74" preserveAspectRatio="xMidYMid slice" clip-path="url(#lotclip5)"/>
+              <rect class="parcel" x="316" y="372" width="128" height="74" rx="10" fill="none"/>
+              <circle class="lot-badge-bg" cx="334" cy="390" r="13"/>
+              <text class="lot-num" x="334" y="390" text-anchor="middle" dominant-baseline="central">5</text>
+            </g>
+            <!-- LOT 6 -->
+            <g class="lot" data-lot="6" role="button" tabindex="0" aria-label="Lot 6 · The Linden, Contemporary Townhouse">
+              <title>Lot 6 · The Linden</title>
+              <clipPath id="lotclip6"><rect x="544" y="366" width="128" height="78" rx="10"/></clipPath>
+              <image href="images/linden.jpg" x="544" y="366" width="128" height="78" preserveAspectRatio="xMidYMid slice" clip-path="url(#lotclip6)"/>
+              <rect class="parcel" x="544" y="366" width="128" height="78" rx="10" fill="none"/>
+              <circle class="lot-badge-bg" cx="562" cy="384" r="13"/>
+              <text class="lot-num" x="562" y="384" text-anchor="middle" dominant-baseline="central">6</text>
+            </g>
+
+            <text class="map-legend" x="26" y="34">FALCON RIDGE · SITE PLAN</text>
+          </svg>
+        </div>
+
+        <aside class="map-panel" id="mapPanel" aria-live="polite">
+          <div class="panel-hint">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Select a lot on the map, or tap <strong>“Show on map”</strong> on any home, to see which plot of land it sits on.</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ BROWSE BY STYLE ============ -->
-  <section class="browse on-dark" id="types">
+  <section id="types">
     <div class="container">
       <div class="section-head">
         <span class="kicker">One Community, Many Styles</span>
@@ -593,19 +666,16 @@
   </section>
 
   <!-- ============ ABOUT ============ -->
-  <section class="about" id="about">
+  <section class="bg-soft" id="about">
     <div class="container about-grid">
       <div class="about-logo">
-        <img src="brand_assets/logo.png" alt="Falcon Homes logo" />
+        <img class="about-mark" src="brand_assets/logo.png" alt="Falcon Homes logo" />
+        <div class="wordmark about-wordmark"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></div>
       </div>
       <div>
         <h2>About Falcon Homes</h2>
-        <p>
-          Falcon Homes builds and sells quality houses made for the way families
-          really live. At our Falcon Ridge community, you'll find a new,
-          dependable place to call home — in the house style that fits you best.
-        </p>
-        <p>And we move at falcon speed: from your first visit to the day you get your keys, we keep things fast, simple, honest, and reliable.</p>
+        <p>Falcon Homes builds and sells quality houses made for the way families really live. At our Falcon Ridge community, you'll find a new, dependable place to call home, in the house style that fits you best.</p>
+        <p>And we move at <span class="fs">Falcon Speed</span>: from your first visit to the day you get your keys, we keep things fast, simple, honest, and reliable.</p>
         <ul class="points">
           <li>Move-in ready homes, keys faster</li>
           <li>Six distinct home styles, one trusted community</li>
@@ -615,13 +685,27 @@
     </div>
   </section>
 
+  <!-- ============ ABOUT CALLOUT (links to second page) ============ -->
+  <section id="our-story">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">More about us</span>
+        <h2>There's more to Falcon Homes</h2>
+        <p>Read our story, meet the Falcon Ridge community, and see how we get your family moved in at <span class="fs">Falcon Speed</span>.</p>
+      </div>
+      <div class="hero-actions">
+        <a class="btn" href="aboutfalco.html">About Falcon Homes</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ FOOTER ============ -->
   <footer id="contact">
     <div class="container">
       <div class="foot-grid">
         <div class="foot-col">
-          <h3>Falcon Homes</h3>
-          <p>Reliable homes for families ready to put down roots at Falcon Ridge — delivered at falcon speed. Your new home starts here.</p>
+          <h3><span class="wordmark"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></span></h3>
+          <p>Reliable homes for families ready to put down roots at Falcon Ridge, delivered at <span class="fs">Falcon Speed</span>. Your new home starts here.</p>
         </div>
         <div class="foot-col">
           <h4>Contact</h4>
@@ -631,18 +715,75 @@
         </div>
         <div class="foot-col">
           <h4>Follow Us</h4>
-          <div class="social">
-            <a href="#">Facebook</a>
-            <a href="#">Instagram</a>
-            <a href="#">LinkedIn</a>
-          </div>
+          <div class="social"><a href="#">Facebook</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
         </div>
       </div>
-      <div class="copyright">
-        © 2026 Falcon Homes. All rights reserved.
-      </div>
+      <div class="copyright">© 2026 Falcon Homes. All rights reserved.</div>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      /* ---- Theme toggle ---- */
+      var toggle = document.getElementById('themeToggle');
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          try { localStorage.setItem('fh-theme', next); } catch (e) {}
+        });
+      }
+
+      /* ---- Lot map interactions ---- */
+      var cards = Array.prototype.slice.call(document.querySelectorAll('.card[data-lot]'));
+      var lots  = Array.prototype.slice.call(document.querySelectorAll('.lot[data-lot]'));
+      var panel = document.getElementById('mapPanel');
+      var mapSection = document.getElementById('map');
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var PIN = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
+
+      function cardByLot(n) { return cards.filter(function (c) { return c.getAttribute('data-lot') === n; })[0]; }
+      function lotByLot(n)  { return lots.filter(function (l) { return l.getAttribute('data-lot') === n; })[0]; }
+
+      function renderPanel(card) {
+        var n = card.getAttribute('data-lot');
+        panel.innerHTML =
+          '<div class="panel-card">' +
+            '<span class="pc-lot">' + PIN + ' Lot ' + n + '</span>' +
+            '<h3>' + card.getAttribute('data-title') + '</h3>' +
+            '<div class="pc-loc">' + card.getAttribute('data-loc') + '</div>' +
+            '<div class="pc-price">' + card.getAttribute('data-price') + '</div>' +
+            '<div class="pc-specs">' + card.getAttribute('data-specs') + '</div>' +
+            '<a class="btn" href="#listings">View this home</a>' +
+          '</div>';
+      }
+
+      function select(n, scrollTarget) {
+        cards.forEach(function (c) { c.classList.remove('is-active'); });
+        lots.forEach(function (l) { l.classList.remove('is-active'); l.setAttribute('aria-pressed', 'false'); });
+        var card = cardByLot(n), lot = lotByLot(n);
+        if (!card || !lot) return;
+        card.classList.add('is-active');
+        lot.classList.add('is-active');
+        lot.setAttribute('aria-pressed', 'true');
+        renderPanel(card);
+        if (scrollTarget) { scrollTarget.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' }); }
+      }
+
+      lots.forEach(function (lot) {
+        var n = lot.getAttribute('data-lot');
+        lot.addEventListener('click', function () { select(n, null); });
+        lot.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); select(n, null); }
+        });
+      });
+
+      cards.forEach(function (card) {
+        var btn = card.querySelector('.pin-btn');
+        if (btn) { btn.addEventListener('click', function () { select(card.getAttribute('data-lot'), mapSection); }); }
+      });
+    })();
+  </script>
 
 </body>
 </html>

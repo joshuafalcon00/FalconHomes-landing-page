@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About · Falcon Homes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Marcellus&family=Outfit:wght@500;600;700&family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    /* Set theme before paint to avoid flash */
+    (function () {
+      try {
+        var saved = localStorage.getItem('fh-theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      /* Brand: single accent green (from brand assets) */
+      --primary: #1F7A52;
+      --primary-bright: #2A9460;
+      --primary-dark: #155C3E;
+
+      /* Neutrals: white dominant (light) */
+      --bg: #FFFFFF;
+      --surface: #FFFFFF;
+      --soft: #F4F8F5;
+      --soft-2: #EAF3EE;
+      --ink: #14241D;
+      --muted: #5C6F66;
+      --line: rgba(20,40,30,0.10);
+      --header-bg: rgba(255,255,255,0.92);
+      --green-deep: #0B2A1E;
+
+      /* Map tokens */
+      --map-bg: #EEF5F0;
+      --road: #E2E9E4;
+      --road-line: #FFFFFF;
+      --parcel: #FFFFFF;
+      --parcel-hover: #DCEFE3;
+      --tree: #BFE0CB;
+      --building: #F5F8F6;
+
+      /* Prestige glow */
+      --glow: 0 4px 14px rgba(31,122,82,0.26);
+      --glow-strong: 0 8px 24px rgba(31,122,82,0.40);
+
+      --font-head: "Poppins", "Segoe UI", system-ui, sans-serif;
+      --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      /* Softened green accent (green plus a hint of white) on neutral black/white grounds, not pure green */
+      --primary: #2E8A63;
+      --primary-bright: #5CA585;
+      --primary-dark: #246B4D;
+
+      --bg: #0F1311;            /* near-black, faint green undertone */
+      --surface: #171D1A;       /* elevated charcoal */
+      --soft: #131816;
+      --soft-2: #1C2420;
+      --ink: #ECF1EF;           /* near-white */
+      --muted: #9AA7A1;         /* neutral gray-green */
+      --line: rgba(255,255,255,0.12);
+      --header-bg: rgba(15,19,17,0.90);
+      --green-deep: #0A0E0C;    /* near-black footer */
+
+      --map-bg: #141A17;
+      --road: #232C28;
+      --road-line: rgba(255,255,255,0.20);
+      --parcel: #1B231F;
+      --parcel-hover: #25322B;
+      --tree: #3F7E5E;
+      --building: #232C28;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; background: var(--green-deep); }
+    body {
+      font-family: var(--font-body);
+      color: var(--ink);
+      background: transparent;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    h1, h2, h3, h4, .title, .price, .brand-name {
+      font-family: var(--font-head);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+    .ico { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* Branded phrase "Falcon Speed" — distinct display serif */
+    .fs { font-family: var(--font-display); font-style: italic; font-weight: 600; letter-spacing: -0.01em; font-size: 1.12em; }
+    .hero h1 .fs { font-size: 1.2em; }
+    .narrow { max-width: 720px; margin: 0 auto; }
+
+    /* ---- Buttons (prestige glow) ---- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--primary); color: #fff; text-decoration: none;
+      padding: 13px 26px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+      border: none; cursor: pointer; box-shadow: var(--glow); min-height: 44px;
+      transition: transform 0.18s ease, box-shadow 0.25s ease, background 0.2s ease;
+    }
+    .btn:hover { background: var(--primary-bright); box-shadow: var(--glow-strong); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); box-shadow: var(--glow); }
+    .btn-ghost {
+      background: var(--surface); color: var(--primary-dark);
+      border: 1.5px solid rgba(31,122,82,0.32); box-shadow: 0 2px 10px rgba(31,122,82,0.10);
+    }
+    [data-theme="dark"] .btn-ghost { color: var(--primary-bright); border-color: rgba(92,165,133,0.40); }
+    .btn-ghost:hover { background: var(--surface); color: var(--primary-dark); border-color: var(--primary); box-shadow: 0 6px 18px rgba(31,122,82,0.18); }
+    [data-theme="dark"] .btn-ghost:hover { background: var(--surface); color: var(--primary-bright); }
+
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 6px;
+    }
+
+    /* ============ HEADER ============ */
+    header.site {
+      background: var(--header-bg); backdrop-filter: saturate(1.1) blur(8px);
+      position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--line);
+      transition: background 0.3s ease;
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 74px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-logo { width: 42px; height: 42px; object-fit: cover; object-position: left center; display: block; filter: drop-shadow(0 0 5px rgba(31,122,82,0.6)); transition: filter 0.25s ease; }
+    .brand:hover .brand-logo { filter: drop-shadow(0 0 9px rgba(31,122,82,0.9)); }
+    [data-theme="dark"] .brand-logo { filter: drop-shadow(0 0 6px rgba(92,165,133,0.75)); }
+    [data-theme="dark"] .brand:hover .brand-logo { filter: drop-shadow(0 0 10px rgba(92,165,133,0.95)); }
+    /* Brand wordmark: two-font lockup, "Homes" larger */
+    .wordmark { display: inline-flex; align-items: baseline; gap: 0.1em; line-height: 1; white-space: nowrap; }
+    .wm-falcon { font-family: "Marcellus", Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: 0.02em; }
+    .wm-homes { font-family: "Outfit", var(--font-body); font-weight: 600; font-size: 1.32em; letter-spacing: -0.01em; }
+    .brand .wordmark { font-size: 1.5rem; }
+    .brand .wm-falcon { color: var(--ink); }
+    .brand .wm-homes { color: var(--primary); }
+    [data-theme="dark"] .brand .wm-homes { color: var(--primary-bright); }
+    .menu { display: flex; gap: 28px; list-style: none; }
+    .menu a { color: var(--ink); text-decoration: none; font-size: 0.92rem; font-weight: 500; position: relative; transition: color 0.2s ease; }
+    .menu a::after { content: ""; position: absolute; left: 0; bottom: -6px; height: 2px; width: 0; background: var(--primary); transition: width 0.22s ease; }
+    .menu a:hover { color: var(--primary); }
+    .menu a:hover::after { width: 100%; }
+    .menu a.active { color: var(--primary); }
+    .menu a.active::after { width: 100%; }
+    .nav-cta { display: flex; align-items: center; gap: 16px; }
+    .nav-cta .login { color: var(--ink); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .nav-cta .login:hover { color: var(--primary); }
+
+    .theme-toggle {
+      width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line);
+      background: var(--surface); color: var(--ink); cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    }
+    .theme-toggle:hover { border-color: var(--primary); box-shadow: 0 4px 14px rgba(31,122,82,0.18); transform: translateY(-1px); }
+    .theme-toggle svg { width: 20px; height: 20px; }
+    .theme-toggle .icon-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+    /* ============ HERO ============ */
+    .hero {
+      position: relative;
+      background: radial-gradient(90% 70% at 50% -10%, var(--soft-2) 0%, rgba(0,0,0,0) 60%), var(--bg);
+      text-align: center; padding: 92px 24px 112px;
+    }
+    .hero .eyebrow {
+      display: inline-block; font-size: 0.76rem; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--primary-dark); background: var(--soft); border: 1px solid rgba(31,122,82,0.22);
+      padding: 6px 16px; border-radius: 30px; margin-bottom: 22px; font-weight: 600;
+    }
+    [data-theme="dark"] .hero .eyebrow { color: var(--primary-bright); border-color: rgba(92,165,133,0.30); }
+    .hero h1 { font-size: 3.3rem; font-weight: 700; line-height: 1.07; letter-spacing: -0.035em; max-width: 780px; margin: 0 auto; color: var(--ink); }
+    .hero h1 .hl { color: var(--primary); }
+    [data-theme="dark"] .hero h1 .hl { color: var(--primary-bright); }
+    .hero p.sub { font-size: 1.15rem; line-height: 1.65; color: var(--muted); max-width: 600px; margin: 20px auto 32px; }
+
+    /* Fixed background video (same as homepage) — background stays still, content scrolls over it */
+    #bgSeq { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -2; display: block; background: var(--green-deep); }
+    #bgScrim { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(180deg, rgba(5,16,11,0.6) 0%, rgba(5,16,11,0.45) 45%, rgba(5,16,11,0.62) 100%); }
+    .hero--video { background: transparent; }
+    .hero-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+    .hero-overlay { position: fixed; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5,20,14,0.58) 0%, rgba(5,20,14,0.72) 100%); }
+    .hero.hero--video .container { position: relative; z-index: 1; }
+    .hero.hero--video .eyebrow { color: #fff; background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.38); }
+    .hero.hero--video h1 { color: #fff; }
+    .hero.hero--video h1 .hl, .hero.hero--video h1 .fs { color: #8FE3B7; }
+    .hero.hero--video p.sub { color: rgba(255,255,255,0.92); }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* ============ SECTIONS ============ */
+    section { padding: 84px 24px; }
+    .bg-soft { background: transparent; }
+    .section-head { text-align: center; margin-bottom: 46px; }
+    .section-head h2 { font-family: var(--font-display); font-style: normal; font-size: 2.15rem; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
+    .section-head p { color: var(--muted); margin-top: 10px; }
+    .section-head .kicker { display: inline-block; color: var(--primary); font-size: 1rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
+    [data-theme="dark"] .section-head .kicker { color: var(--primary-bright); }
+
+    /* ============ CARDS (shared) ============ */
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+    .cards-2 { grid-template-columns: repeat(2, 1fr); max-width: 720px; margin: 0 auto; }
+    .card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+      box-shadow: 0 1px 2px rgba(20,40,30,0.04);
+      transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.3s ease;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 20px 42px rgba(31,122,82,0.16), 0 4px 12px rgba(20,40,30,0.08); }
+    .card .body { padding: 24px; }
+    .card .title { font-size: 1.12rem; font-weight: 600; color: var(--ink); }
+    .card .body p { color: var(--muted); font-size: 0.95rem; margin-top: 8px; }
+
+    /* ============ ABOUT / STORY ============ */
+    .about-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 56px; align-items: center; }
+    .about-logo { background: transparent; border: none; padding: 0; box-shadow: none; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .about-mark { width: 128px; height: 128px; object-fit: cover; object-position: left center; border-radius: 20px; filter: drop-shadow(0 0 12px rgba(31,122,82,0.3)); }
+    .about-wordmark { font-size: 2.7rem; line-height: 1; }
+    .about-wordmark .wm-falcon { color: #fff; }
+    .about-wordmark .wm-homes { color: #8FE3B7; }
+    [data-theme="dark"] .about-wordmark .wm-homes { color: var(--primary-bright); }
+    .about h2 { font-family: var(--font-display); font-style: normal; font-size: 2.15rem; font-weight: 600; color: var(--primary); margin-bottom: 16px; letter-spacing: -0.005em; }
+    [data-theme="dark"] .about h2 { color: var(--primary-bright); }
+    .about p { color: var(--muted); font-size: 1.05rem; line-height: 1.75; margin-bottom: 16px; }
+    .points { list-style: none; margin-top: 10px; }
+    .points li { position: relative; padding-left: 30px; margin-bottom: 12px; color: var(--ink); }
+    .points li::before { content: "✓"; position: absolute; left: 0; top: 4px; color: #fff; background: var(--primary); width: 20px; height: 20px; border-radius: 50%; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; }
+
+    /* Steps (genuine sequence) */
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .step { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
+    .step .step-no { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; background: var(--primary); color: #fff; font-family: var(--font-head); font-weight: 700; box-shadow: var(--glow); margin-bottom: 14px; }
+    .step h3 { font-size: 1.05rem; color: var(--ink); }
+    .step p { color: var(--muted); font-size: 0.92rem; margin-top: 6px; }
+
+    /* CTA band */
+    .cta-band { text-align: center; }
+    .cta-band .hero-actions { margin-top: 24px; }
+
+
+    /* Page sits over a fixed video — light on-section text */
+    .section-head h2 { color: #fff; }
+    .section-head p { color: rgba(255,255,255,0.9); }
+    .section-head .kicker { color: #8FE3B7; }
+    .about h2 { color: #8FE3B7; }
+    .about p { color: rgba(255,255,255,0.92); }
+    .points li { color: #fff; }
+    /* Night mode: brighter green so headings/labels stay clearly readable over the video */
+    [data-theme="dark"] .section-head .kicker { color: #A6ECC9; }
+    [data-theme="dark"] .about h2 { color: #A6ECC9; }
+    [data-theme="dark"] .about-wordmark .wm-homes { color: #A6ECC9; }
+
+    /* Section fade in / fade out on scroll */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1 !important; transform: none !important; } }
+
+    /* ============ FOOTER ============ */
+    footer { background: var(--green-deep); color: #c0d4c9; padding: 60px 24px 30px; border-top: 3px solid var(--primary); }
+    .foot-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 36px; }
+    .foot-col { max-width: 280px; }
+    .foot-col h3 { color: #fff; font-size: 1.25rem; margin-bottom: 12px; }
+    .foot-col h3 .wm-falcon { color: #fff; }
+    .foot-col h3 .wm-homes { color: #fff; }
+    .foot-col h4 { color: #fff; font-size: 0.95rem; margin-bottom: 12px; }
+    .foot-col p, .foot-col a { color: #acc6ba; text-decoration: none; font-size: 0.93rem; }
+    .foot-col p { margin-bottom: 9px; }
+    .foot-col a:hover { color: #fff; }
+    .social a { display: inline-block; margin-right: 14px; font-weight: 600; color: #fff; }
+    .social a:hover { color: var(--primary-bright); }
+    .copyright { border-top: 1px solid rgba(255,255,255,0.10); margin-top: 40px; padding-top: 22px; text-align: center; font-size: 0.86rem; color: #7e988b; }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 940px) {
+      .menu { display: none; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .about-grid { grid-template-columns: 1fr; gap: 36px; }
+    }
+    @media (max-width: 560px) {
+      .hero h1 { font-size: 2.2rem; }
+      .cards { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .container { padding: 0 18px; }
+      section { padding: 64px 0; }
+      .about-logo { padding: 36px; }
+      .nav-cta .login { display: none; }
+      .brand .wordmark { display: none; }
+      .nav .btn { padding: 11px 16px; font-size: 0.88rem; }
+      .nav { height: 64px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgSeq" aria-hidden="true"></canvas>
+  <div id="bgScrim" aria-hidden="true"></div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site">
+    <div class="container nav">
+      <a class="brand" href="index.html"><img class="brand-logo" src="brand_assets/logo.png" alt="" /><span class="wordmark" aria-label="Falcon Homes"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></span></a>
+      <nav>
+        <ul class="menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#listings">Listings</a></li>
+          <li><a href="index.html#map">Lot Map</a></li>
+          <li><a href="aboutfalco.html" class="active" aria-current="page">About</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-cta">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+        <a class="login" href="index.html#contact">Sign In</a>
+        <a class="btn" href="index.html#listings">View Listings</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ PAGE HERO ============ -->
+  <section class="hero hero--video" id="top">
+    <div class="container">
+      <span class="eyebrow">Our Story</span>
+      <h1>Building homes at <span class="hl fs">Falcon Speed</span></h1>
+      <p class="sub">Falcon Homes exists to get families into a home they can trust: quickly, honestly, and without the runaround. Here's who we are and how we work.</p>
+      <div class="hero-actions">
+        <a class="btn" href="index.html#listings">View Listings</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHO WE ARE ============ -->
+  <section>
+    <div class="container about about-grid">
+      <div class="about-logo">
+        <img class="about-mark" src="brand_assets/logo.png" alt="Falcon Homes logo" />
+        <div class="wordmark about-wordmark"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></div>
+      </div>
+      <div>
+        <h2>Who we are</h2>
+        <p>Falcon Homes is a house-and-lot builder focused on one community: Falcon Ridge. We design, build, and sell quality homes made for the way families really live, then hand over the keys faster than anyone expects.</p>
+        <p>We keep our scope tight on purpose. By building within a single, well-planned community instead of scattering across dozens of sites, we control quality, keep timelines short, and know every lot on the map by heart.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THE COMMUNITY ============ -->
+  <section class="bg-soft">
+    <div class="container">
+      <div class="about narrow">
+        <h2>The Falcon Ridge community</h2>
+        <p>Falcon Ridge is a modern, master-planned neighborhood organized into three phases. Every home sits on a numbered lot, so you're not just choosing a floor plan. You're choosing exactly where on the ridge your family will live.</p>
+        <p>Six distinct house styles share the same streets, landscaping, and standards. Whatever style fits you, you get the same dependable build and the same connected community.</p>
+        <p><a href="index.html#map">Explore the interactive lot map →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHAT WE STAND FOR ============ -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">What we stand for</span>
+        <h2>Four things we never compromise</h2>
+        <p>The promises behind every Falcon Homes key handover.</p>
+      </div>
+      <div class="cards cards-2">
+        <article class="card"><div class="body"><div class="title"><span class="fs">Falcon Speed</span></div><p>From first visit to move-in day, we keep things moving, with no stalled timelines and no silence between steps.</p></div></article>
+        <article class="card"><div class="body"><div class="title">Reliability</div><p>We do what we say. Clear pricing, honest answers, and a process you can actually follow start to finish.</p></div></article>
+        <article class="card"><div class="body"><div class="title">Quality craftsmanship</div><p>Move-in ready means truly ready. Homes are built to last and checked before we ever hand over the keys.</p></div></article>
+        <article class="card"><div class="body"><div class="title">Family-first</div><p>Layouts, lots, and community choices are made for real family life, not for a brochure.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="bg-soft">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">How it works</span>
+        <h2>From first visit to your keys</h2>
+        <p>Four steps, and we move fast at every one.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="step-no">1</span><h3>Visit Falcon Ridge</h3><p>Tour the community and the home styles in person, or browse them online first.</p></div>
+        <div class="step"><span class="step-no">2</span><h3>Choose your lot</h3><p>Pick the house style and the exact lot on the map that fits your family.</p></div>
+        <div class="step"><span class="step-no">3</span><h3>Reserve it</h3><p>Lock in your home and lot, and we'll walk you through the paperwork clearly.</p></div>
+        <div class="step"><span class="step-no">4</span><h3>Move in</h3><p>Get your keys to a move-in ready home at <span class="fs">Falcon Speed</span>.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY CHOOSE US ============ -->
+  <section>
+    <div class="container about about-grid">
+      <div>
+        <h2>Why families choose Falcon Homes</h2>
+        <ul class="points">
+          <li>Move-in ready homes, with keys handed over faster</li>
+          <li>Six distinct home styles within one trusted community</li>
+          <li>Every home tied to a real, numbered lot you can see on the map</li>
+          <li>Straightforward pricing and a process you can follow</li>
+          <li>One focused community means consistent quality and standards</li>
+        </ul>
+      </div>
+      <div class="about-logo">
+        <img class="about-mark" src="brand_assets/logo.png" alt="Falcon Homes logo" />
+        <div class="wordmark about-wordmark"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA BAND ============ -->
+  <section class="bg-soft cta-band">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Ready when you are</span>
+        <h2>Move into your new home at <span class="fs">Falcon Speed</span></h2>
+        <p>Book a visit to Falcon Ridge, or browse the homes that are ready now.</p>
+      </div>
+      <div class="hero-actions">
+        <a class="btn" href="index.html#listings">View Listings</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer id="contact">
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-col">
+          <h3><span class="wordmark"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></span></h3>
+          <p>Reliable homes for families ready to put down roots at Falcon Ridge, delivered at <span class="fs">Falcon Speed</span>. Your new home starts here.</p>
+        </div>
+        <div class="foot-col">
+          <h4>Contact</h4>
+          <p>Email: <a href="mailto:hello@falconhomes.com">hello@falconhomes.com</a></p>
+          <p>Phone: <a href="tel:+10000000000">+1 (000) 000-0000</a></p>
+          <p>Falcon Ridge, 123 Greenfield Ave</p>
+        </div>
+        <div class="foot-col">
+          <h4>Follow Us</h4>
+          <div class="social"><a href="#">Facebook</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+        </div>
+      </div>
+      <div class="copyright">© 2026 Falcon Homes. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var toggle = document.getElementById('themeToggle');
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          try { localStorage.setItem('fh-theme', next); } catch (e) {}
+        });
+      }
+    })();
+  </script>
+
+  <script>
+    /* Frame sequence as the fixed page background — scrubs with whole-page scroll (no caption text) */
+    (function () {
+      var canvas = document.getElementById('bgSeq');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var N = 60, frames = [], loaded = 0, cur = -1;
+      for (var i = 1; i <= N; i++) {
+        var im = new Image();
+        im.src = 'day2_video/frames/frame_' + String(i).padStart(4, '0') + '.jpg';
+        im.onload = function () { loaded++; if (loaded <= 2) render(); };
+        frames.push(im);
+      }
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      function resize() {
+        canvas.width = Math.round(window.innerWidth * dpr);
+        canvas.height = Math.round(window.innerHeight * dpr);
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        cur = -1; render();
+      }
+      function drawCover(img) {
+        var cw = canvas.width, ch = canvas.height, iw = img.naturalWidth, ih = img.naturalHeight;
+        if (!iw || !ih) return;
+        var portrait = window.innerHeight >= window.innerWidth;
+        var s = Math.max(cw / iw, ch / ih);
+        if (portrait) s *= 1.18;          // zoom in a touch on phones for room to recenter
+        var dw = iw * s, dh = ih * s;
+        // Focal point: the front door (~46% across, ~55% down). Center it on mobile.
+        var fx = portrait ? 0.46 : 0.5;
+        var fy = portrait ? 0.55 : 0.5;
+        var dx = cw * 0.5 - fx * dw, dy = ch * 0.5 - fy * dh;
+        dx = Math.min(0, Math.max(cw - dw, dx));   // clamp so no empty edges show
+        dy = Math.min(0, Math.max(ch - dh, dy));
+        ctx.drawImage(img, dx, dy, dw, dh);
+      }
+      function nearestLoaded(idx) {
+        for (var d = 0; d < N; d++) {
+          if (frames[idx + d] && frames[idx + d].complete && frames[idx + d].naturalWidth) return frames[idx + d];
+          if (frames[idx - d] && frames[idx - d].complete && frames[idx - d].naturalWidth) return frames[idx - d];
+        }
+        return null;
+      }
+      function progress() {
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        var y = window.scrollY || window.pageYOffset || 0;
+        return max > 0 ? Math.max(0, Math.min(1, y / max)) : 0;
+      }
+      var ticking = false;
+      function render() {
+        var idx = Math.round(progress() * (N - 1));
+        if (idx !== cur) {
+          var img = (frames[idx] && frames[idx].complete && frames[idx].naturalWidth) ? frames[idx] : nearestLoaded(idx);
+          if (img) { drawCover(img); cur = idx; }
+        }
+        ticking = false;
+      }
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(render); } }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', resize, { passive: true });
+      resize();
+    })();
+  </script>
+
+  <script>
+    /* Fade each section in and out as it scrolls through the viewport */
+    (function () {
+      var secs = Array.prototype.slice.call(document.querySelectorAll('section'))
+        .filter(function (s) { return !s.classList.contains('hero') && !s.classList.contains('scrolly'); });
+      secs.forEach(function (s) { s.classList.add('reveal'); });
+      if (!('IntersectionObserver' in window)) { secs.forEach(function (s) { s.classList.add('in'); }); return; }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) e.target.classList.add('in');
+          else e.target.classList.remove('in');
+        });
+      }, { threshold: 0.12 });
+      secs.forEach(function (s) { io.observe(s); });
+    })();
+  </script>
+
+</body>
+</html>

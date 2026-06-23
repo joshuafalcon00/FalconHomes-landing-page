@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Started · Falcon Homes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Marcellus&family=Outfit:wght@500;600;700&family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    /* Set theme before paint to avoid flash */
+    (function () {
+      try {
+        var saved = localStorage.getItem('fh-theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --primary: #1F7A52;
+      --primary-bright: #2A9460;
+      --primary-dark: #155C3E;
+
+      --bg: #FFFFFF;
+      --surface: #FFFFFF;
+      --soft: #F4F8F5;
+      --soft-2: #EAF3EE;
+      --ink: #14241D;
+      --muted: #5C6F66;
+      --line: rgba(20,40,30,0.10);
+      --header-bg: rgba(255,255,255,0.92);
+      --green-deep: #0B2A1E;
+
+      --glow: 0 4px 14px rgba(31,122,82,0.26);
+      --glow-strong: 0 8px 24px rgba(31,122,82,0.40);
+
+      --font-head: "Poppins", "Segoe UI", system-ui, sans-serif;
+      --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --primary: #2E8A63;
+      --primary-bright: #5CA585;
+      --primary-dark: #246B4D;
+
+      --bg: #0F1311;
+      --surface: #171D1A;
+      --soft: #131816;
+      --soft-2: #1C2420;
+      --ink: #ECF1EF;
+      --muted: #9AA7A1;
+      --line: rgba(255,255,255,0.12);
+      --header-bg: rgba(15,19,17,0.90);
+      --green-deep: #0A0E0C;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; background: var(--green-deep); }
+    body {
+      font-family: var(--font-body); color: var(--ink); background: transparent;
+      line-height: 1.7; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    h1, h2, h3, h4 { font-family: var(--font-head); letter-spacing: -0.02em; line-height: 1.2; }
+    .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+
+    .fs { font-family: var(--font-display); font-style: italic; font-weight: 600; letter-spacing: -0.01em; font-size: 1.12em; }
+    .hero h1 .fs { font-size: 1.2em; }
+
+    /* ---- Buttons ---- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--primary); color: #fff; text-decoration: none;
+      padding: 13px 26px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+      border: none; cursor: pointer; box-shadow: var(--glow); min-height: 44px;
+      transition: transform 0.18s ease, box-shadow 0.25s ease, background 0.2s ease;
+    }
+    .btn:hover { background: var(--primary-bright); box-shadow: var(--glow-strong); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); box-shadow: var(--glow); }
+    .btn-ghost {
+      background: var(--surface); color: var(--primary-dark);
+      border: 1.5px solid rgba(31,122,82,0.32); box-shadow: 0 2px 10px rgba(31,122,82,0.10);
+    }
+    [data-theme="dark"] .btn-ghost { color: var(--primary-bright); border-color: rgba(92,165,133,0.40); }
+    .btn-ghost:hover { background: var(--surface); color: var(--primary-dark); border-color: var(--primary); box-shadow: 0 6px 18px rgba(31,122,82,0.18); }
+    [data-theme="dark"] .btn-ghost:hover { background: var(--surface); color: var(--primary-bright); }
+
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 6px;
+    }
+
+    /* ---- Header ---- */
+    header.site {
+      background: var(--header-bg); backdrop-filter: saturate(1.1) blur(8px);
+      position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--line); transition: background 0.3s ease;
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 74px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-logo { width: 42px; height: 42px; object-fit: cover; object-position: left center; display: block; filter: drop-shadow(0 0 5px rgba(31,122,82,0.6)); transition: filter 0.25s ease; }
+    .brand:hover .brand-logo { filter: drop-shadow(0 0 9px rgba(31,122,82,0.9)); }
+    [data-theme="dark"] .brand-logo { filter: drop-shadow(0 0 6px rgba(92,165,133,0.75)); }
+    [data-theme="dark"] .brand:hover .brand-logo { filter: drop-shadow(0 0 10px rgba(92,165,133,0.95)); }
+    /* Brand wordmark: two-font lockup, "Homes" larger */
+    .wordmark { display: inline-flex; align-items: baseline; gap: 0.1em; line-height: 1; white-space: nowrap; }
+    .wm-falcon { font-family: "Marcellus", Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: 0.02em; }
+    .wm-homes { font-family: "Outfit", var(--font-body); font-weight: 600; font-size: 1.32em; letter-spacing: -0.01em; }
+    .brand .wordmark { font-size: 1.5rem; }
+    .brand .wm-falcon { color: var(--ink); }
+    .brand .wm-homes { color: var(--primary); }
+    [data-theme="dark"] .brand .wm-homes { color: var(--primary-bright); }
+    .menu { display: flex; gap: 28px; list-style: none; }
+    .menu a { color: var(--ink); text-decoration: none; font-size: 0.92rem; font-weight: 500; position: relative; transition: color 0.2s ease; }
+    .menu a::after { content: ""; position: absolute; left: 0; bottom: -6px; height: 2px; width: 0; background: var(--primary); transition: width 0.22s ease; }
+    .menu a:hover { color: var(--primary); }
+    .menu a:hover::after { width: 100%; }
+    .nav-cta { display: flex; align-items: center; gap: 16px; }
+    .nav-cta .login { color: var(--ink); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .nav-cta .login:hover { color: var(--primary); }
+    .theme-toggle {
+      width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line);
+      background: var(--surface); color: var(--ink); cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    }
+    .theme-toggle:hover { border-color: var(--primary); box-shadow: 0 4px 14px rgba(31,122,82,0.18); transform: translateY(-1px); }
+    .theme-toggle svg { width: 20px; height: 20px; }
+    .theme-toggle .icon-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+    /* ---- Page hero ---- */
+    .hero {
+      position: relative;
+      background: radial-gradient(90% 70% at 50% -10%, var(--soft-2) 0%, rgba(0,0,0,0) 60%), var(--bg);
+      text-align: center; padding: 72px 24px 40px;
+    }
+    .hero .eyebrow {
+      display: inline-block; font-size: 0.76rem; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--primary-dark); background: var(--soft); border: 1px solid rgba(31,122,82,0.22);
+      padding: 6px 16px; border-radius: 30px; margin-bottom: 22px; font-weight: 600;
+    }
+    [data-theme="dark"] .hero .eyebrow { color: var(--primary-bright); border-color: rgba(92,165,133,0.30); }
+    .hero h1 { font-size: 2.7rem; font-weight: 700; line-height: 1.08; letter-spacing: -0.03em; max-width: 760px; margin: 0 auto; color: var(--ink); }
+    .hero h1 .fs { color: var(--primary); }
+    [data-theme="dark"] .hero h1 .fs { color: var(--primary-bright); }
+    .hero p.sub { font-size: 1.1rem; color: var(--muted); max-width: 580px; margin: 18px auto 0; }
+
+    /* Fixed background video (same setup as the homepage) */
+    .hero--video { background: transparent; }
+    .hero-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+    .hero-overlay { position: fixed; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5,20,14,0.58) 0%, rgba(5,20,14,0.72) 100%); }
+    .hero.hero--video .container { position: relative; z-index: 1; }
+    .hero.hero--video .eyebrow { color: #fff; background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.38); }
+    .hero.hero--video h1 { color: #fff; }
+    .hero.hero--video h1 .fs { color: #8FE3B7; }
+    .hero.hero--video p.sub { color: rgba(255,255,255,0.92); }
+
+    /* ---- Form ---- */
+    .form-section-wrap { padding: 40px 24px 84px; }
+    .form-wrap { max-width: 820px; margin: 0 auto; }
+    .pref-banner {
+      display: flex; align-items: center; gap: 10px; background: var(--soft);
+      border: 1px solid rgba(31,122,82,0.20); border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; color: var(--ink);
+    }
+    .pref-banner svg { width: 20px; height: 20px; color: var(--primary); flex-shrink: 0; }
+    [data-theme="dark"] .pref-banner svg { color: var(--primary-bright); }
+    .pref-banner strong { color: var(--primary-dark); }
+    [data-theme="dark"] .pref-banner strong { color: var(--primary-bright); }
+
+    .form-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 28px; box-shadow: 0 18px 42px rgba(20,40,30,0.08); }
+    .form-block { margin-bottom: 30px; }
+    .form-block:last-of-type { margin-bottom: 0; }
+    .form-block > h2 { font-family: var(--font-display); font-style: normal; font-size: 1.3rem; font-weight: 600; color: var(--ink); margin-bottom: 4px; letter-spacing: -0.005em; }
+    .form-block > .hint { color: var(--muted); font-size: 0.9rem; margin-bottom: 18px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; }
+    .field .req { color: var(--primary); }
+    .field input, .field select, .field textarea {
+      background: var(--bg); border: 1px solid var(--line); color: var(--ink);
+      padding: 12px 13px; border-radius: 8px; font-size: 0.92rem; width: 100%; font-family: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(31,122,82,0.12); }
+    .field input::placeholder, .field textarea::placeholder { color: #9bada4; }
+    .field select { appearance: none; cursor: pointer; }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .consent { display: flex; gap: 10px; align-items: flex-start; margin: 22px 0; color: var(--muted); font-size: 0.92rem; }
+    .consent input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--primary); flex-shrink: 0; }
+    .form-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+    .form-actions .btn { padding: 15px 28px; font-size: 1rem; }
+
+    .confirm { text-align: center; padding: 30px 10px; }
+    .confirm .check { width: 56px; height: 56px; border-radius: 50%; background: var(--primary); color: #fff; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+    .confirm h2 { font-size: 1.6rem; color: var(--ink); margin-bottom: 10px; }
+    .confirm p { color: var(--muted); max-width: 460px; margin: 0 auto 22px; }
+    .hidden { display: none; }
+
+    /* ---- Footer ---- */
+    footer { background: var(--green-deep); color: #c0d4c9; padding: 60px 24px 30px; border-top: 3px solid var(--primary); }
+    .foot-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 36px; }
+    .foot-col { max-width: 280px; }
+    .foot-col h3 { color: #fff; font-size: 1.25rem; margin-bottom: 12px; }
+    .foot-col h3 .wm-falcon { color: #fff; }
+    .foot-col h3 .wm-homes { color: #fff; }
+    .foot-col h4 { color: #fff; font-size: 0.95rem; margin-bottom: 12px; }
+    .foot-col p, .foot-col a { color: #acc6ba; text-decoration: none; font-size: 0.93rem; }
+    .foot-col p { margin-bottom: 9px; }
+    .foot-col a:hover { color: #fff; }
+    .social a { display: inline-block; margin-right: 14px; font-weight: 600; color: #fff; }
+    .social a:hover { color: var(--primary-bright); }
+    .copyright { border-top: 1px solid rgba(255,255,255,0.10); margin-top: 40px; padding-top: 22px; text-align: center; font-size: 0.86rem; color: #7e988b; }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 940px) { .menu { display: none; } }
+    @media (max-width: 620px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2rem; }
+      .container { padding: 0 18px; }
+      .form-section-wrap { padding: 30px 0 64px; }
+      .form-card { padding: 22px; }
+      .nav-cta .login { display: none; }
+      .brand .wordmark { display: none; }
+      .nav .btn { padding: 11px 16px; font-size: 0.88rem; }
+      .nav { height: 64px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site">
+    <div class="container nav">
+      <a class="brand" href="index.html"><img class="brand-logo" src="brand_assets/logo.png" alt="" /><span class="wordmark" aria-label="Falcon Homes"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></span></a>
+      <nav>
+        <ul class="menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#listings">Listings</a></li>
+          <li><a href="index.html#map">Lot Map</a></li>
+          <li><a href="aboutfalco.html">About</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-cta">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+        <a class="login" href="index.html#contact">Sign In</a>
+        <a class="btn" href="index.html#listings">View Listings</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ PAGE HERO ============ -->
+  <section class="hero hero--video">
+    <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+      <source src="brand_assets/Family.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="container">
+      <span class="eyebrow">Get Started</span>
+      <h1>Tell us about you, and we'll move at <span class="fs">Falcon Speed</span></h1>
+      <p class="sub">Share a few details and your home preferences. A Falcon Homes advisor will reach out to set up your visit to Falcon Ridge.</p>
+    </div>
+  </section>
+
+  <!-- ============ FORM ============ -->
+  <div class="form-section-wrap">
+    <div class="container form-wrap">
+
+      <div class="pref-banner hidden" id="prefBanner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>You're inquiring about <strong id="prefName"></strong>.</span>
+      </div>
+
+      <form class="form-card" id="inquiryForm" novalidate>
+        <div class="form-block">
+          <h2>Your details</h2>
+          <p class="hint">So we know who to reach out to.</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="firstName">First name <span class="req">*</span></label>
+              <input id="firstName" name="firstName" type="text" placeholder="Maria" required />
+            </div>
+            <div class="field">
+              <label for="lastName">Last name <span class="req">*</span></label>
+              <input id="lastName" name="lastName" type="text" placeholder="Santos" required />
+            </div>
+            <div class="field">
+              <label for="email">Email <span class="req">*</span></label>
+              <input id="email" name="email" type="email" placeholder="maria@email.com" required />
+            </div>
+            <div class="field">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" placeholder="+1 (000) 000-0000" />
+            </div>
+            <div class="field">
+              <label for="contactMethod">Preferred contact</label>
+              <select id="contactMethod" name="contactMethod">
+                <option>Email</option>
+                <option>Phone call</option>
+                <option>Text message</option>
+                <option>Either is fine</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-block">
+          <h2>What you're looking for</h2>
+          <p class="hint">Tell us the home that caught your eye, and what fits your family.</p>
+          <div class="form-grid">
+            <div class="field full">
+              <label for="prefHome">Preferred home</label>
+              <select id="prefHome" name="prefHome">
+                <option value="">I'm not sure yet</option>
+                <option value="1">The Aspen · Modern Minimalist</option>
+                <option value="2">The Willow · Classic Bungalow</option>
+                <option value="3">The Magnolia · Two-Storey</option>
+                <option value="4">The Sienna · Mediterranean Villa</option>
+                <option value="5">The Cedar · Craftsman Cottage</option>
+                <option value="6">The Linden · Contemporary Townhouse</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="phase">Preferred phase</label>
+              <select id="phase" name="phase">
+                <option>Any phase</option>
+                <option>Falcon Ridge · Phase 1</option>
+                <option>Falcon Ridge · Phase 2</option>
+                <option>Falcon Ridge · Phase 3</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="beds">Bedrooms</label>
+              <select id="beds" name="beds">
+                <option>Any</option><option>1+</option><option>2+</option><option>3+</option><option>4+</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="budget">Budget range</label>
+              <select id="budget" name="budget">
+                <option>No preference</option>
+                <option>Under $250,000</option>
+                <option>$250,000 to $350,000</option>
+                <option>$350,000 to $450,000</option>
+                <option>$450,000+</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="timeframe">Move-in timeframe</label>
+              <select id="timeframe" name="timeframe">
+                <option>As soon as possible</option>
+                <option>1 to 3 months</option>
+                <option>3 to 6 months</option>
+                <option>6 months or more</option>
+                <option>Just exploring</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-block">
+          <h2>Visit and notes</h2>
+          <p class="hint">Optional, but it helps us prepare.</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="visitDate">Preferred visit date</label>
+              <input id="visitDate" name="visitDate" type="date" />
+            </div>
+            <div class="field full">
+              <label for="notes">Anything else?</label>
+              <textarea id="notes" name="notes" placeholder="Questions, must-haves, or anything we should know."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <label class="consent">
+          <input type="checkbox" id="consent" name="consent" required />
+          <span>I'd like a Falcon Homes advisor to contact me about Falcon Ridge homes.</span>
+        </label>
+
+        <div class="form-actions">
+          <button class="btn" type="submit">Submit my details</button>
+          <a class="btn btn-ghost" href="index.html#listings">Back to listings</a>
+        </div>
+      </form>
+
+      <div class="form-card confirm hidden" id="confirmCard">
+        <span class="check">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </span>
+        <h2 id="confirmTitle">Thanks, we've got your details</h2>
+        <p id="confirmBody">A Falcon Homes advisor will be in touch shortly to set up your visit.</p>
+        <a class="btn" href="index.html#listings">Browse more homes</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer id="contact">
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-col">
+          <h3><span class="wordmark"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></span></h3>
+          <p>Reliable homes for families ready to put down roots at Falcon Ridge, delivered at <span class="fs">Falcon Speed</span>. Your new home starts here.</p>
+        </div>
+        <div class="foot-col">
+          <h4>Contact</h4>
+          <p>Email: <a href="mailto:hello@falconhomes.com">hello@falconhomes.com</a></p>
+          <p>Phone: <a href="tel:+10000000000">+1 (000) 000-0000</a></p>
+          <p>Falcon Ridge, 123 Greenfield Ave</p>
+        </div>
+        <div class="foot-col">
+          <h4>Follow Us</h4>
+          <div class="social"><a href="#">Facebook</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+        </div>
+      </div>
+      <div class="copyright">© 2026 Falcon Homes. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      /* Theme toggle */
+      var toggle = document.getElementById('themeToggle');
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          try { localStorage.setItem('fh-theme', next); } catch (e) {}
+        });
+      }
+
+      var prefHome = document.getElementById('prefHome');
+      var banner = document.getElementById('prefBanner');
+      var prefName = document.getElementById('prefName');
+
+      /* Each home's real details, so a listing pre-fills the whole form, not just the name */
+      var HOMES = {
+        '1': { phase: 'Falcon Ridge · Phase 1', beds: '3+', budget: 'Under $250,000' },
+        '2': { phase: 'Falcon Ridge · Phase 1', beds: '2+', budget: 'Under $250,000' },
+        '3': { phase: 'Falcon Ridge · Phase 2', beds: '4+', budget: '$350,000 to $450,000' },
+        '4': { phase: 'Falcon Ridge · Phase 2', beds: '4+', budget: '$350,000 to $450,000' },
+        '5': { phase: 'Falcon Ridge · Phase 3', beds: '3+', budget: '$250,000 to $350,000' },
+        '6': { phase: 'Falcon Ridge · Phase 3', beds: '3+', budget: 'Under $250,000' }
+      };
+      function setSelectByText(sel, text) {
+        if (!sel) return;
+        for (var i = 0; i < sel.options.length; i++) {
+          if (sel.options[i].text === text) { sel.selectedIndex = i; return; }
+        }
+      }
+      function autofillFromHome(id) {
+        var h = HOMES[id];
+        if (!h) return;
+        setSelectByText(document.getElementById('phase'), h.phase);
+        setSelectByText(document.getElementById('beds'), h.beds);
+        setSelectByText(document.getElementById('budget'), h.budget);
+      }
+
+      /* Preselect the home from ?lot=N (or ?home=Name) passed by the listing button */
+      var params = new URLSearchParams(window.location.search);
+      var lot = params.get('lot');
+      var homeParam = params.get('home');
+
+      function showBanner(label) {
+        if (!label) return;
+        prefName.textContent = label;
+        banner.classList.remove('hidden');
+      }
+
+      if (lot && prefHome.querySelector('option[value="' + CSS.escape(lot) + '"]')) {
+        prefHome.value = lot;
+        showBanner(prefHome.options[prefHome.selectedIndex].text);
+        autofillFromHome(lot);
+      } else if (homeParam) {
+        var match = Array.prototype.slice.call(prefHome.options).filter(function (o) {
+          return o.text.toLowerCase() === homeParam.toLowerCase();
+        })[0];
+        if (match) { prefHome.value = match.value; }
+        showBanner(homeParam);
+      }
+
+      /* Keep the banner in sync if the visitor changes the selection */
+      prefHome.addEventListener('change', function () {
+        if (prefHome.value) { showBanner(prefHome.options[prefHome.selectedIndex].text); autofillFromHome(prefHome.value); }
+        else { banner.classList.add('hidden'); }
+      });
+
+      /* Submit: front-end only (no backend yet) — confirm in place */
+      var form = document.getElementById('inquiryForm');
+      var confirmCard = document.getElementById('confirmCard');
+      var confirmBody = document.getElementById('confirmBody');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        var name = document.getElementById('firstName').value.trim();
+        var home = prefHome.value ? prefHome.options[prefHome.selectedIndex].text : null;
+        confirmBody.textContent = (name ? name + ', a' : 'A') + ' Falcon Homes advisor will be in touch shortly'
+          + (home ? ' about ' + home : '') + ' to set up your visit.';
+        form.classList.add('hidden');
+        confirmCard.classList.remove('hidden');
+        confirmCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    })();
+  </script>
+
+</body>
+</html>

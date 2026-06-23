@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Falcon Homes — Move In at Falcon Speed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* Brand */
+      --primary: #1F7A52;        /* Falcon primary green */
+      --primary-bright: #2A9460;
+      --primary-dark: #155C3E;
+
+      /* Accent — gold (suited to a premium property site) */
+      --gold: #C8A24A;
+      --gold-bright: #E0C172;
+
+      /* Money green */
+      --mint: #7FE3AD;
+
+      /* Dark theme greens (deepened) */
+      --green-900: #051C14;      /* darkest bg */
+      --green-850: #07241A;
+      --green-800: #092A1E;      /* section bg */
+      --green-panel: #0D3527;    /* cards / panels on dark */
+      --line: rgba(255,255,255,0.08);
+
+      --white: #FFFFFF;
+      --ink: #16241d;
+      --muted-dark: #8AA89A;     /* muted text on dark */
+      --muted-light: #5d6f66;    /* muted text on light */
+      --soft: #f3f7f4;
+
+      /* Type */
+      --font-head: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+      --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      color: var(--ink);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4, .title, .price, .brand-name {
+      font-family: var(--font-head);
+    }
+    .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+    .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      text-decoration: none;
+      padding: 13px 28px;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.05s ease;
+    }
+    .btn:hover { background: var(--primary-bright); }
+    .btn:active { transform: translateY(1px); }
+    .btn-gold { background: var(--gold); color: #1c1305; }
+    .btn-gold:hover { background: var(--gold-bright); }
+
+    /* ============ HEADER ============ */
+    header.site {
+      background: var(--green-900);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--line);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 74px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      padding: 7px 14px;
+      border-radius: 8px;
+    }
+    .brand img { height: 30px; width: auto; display: block; }
+    .menu { display: flex; gap: 28px; list-style: none; }
+    .menu a {
+      color: #cfe0d7;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      transition: color 0.2s ease;
+    }
+    .menu a:hover { color: var(--gold-bright); }
+    .nav-cta { display: flex; align-items: center; gap: 18px; }
+    .nav-cta .login { color: #c2d6cb; text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .nav-cta .login:hover { color: #fff; }
+
+    /* ============ HERO ============ */
+    .hero {
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(4,20,14,0.86) 0%, rgba(4,18,12,0.95) 100%),
+        radial-gradient(120% 120% at 70% 0%, #134a35 0%, #0a2a1e 45%, #051c14 100%);
+      color: #fff;
+      text-align: center;
+      padding: 96px 24px 150px;
+      overflow: hidden;
+    }
+    /* rooftop skyline silhouette */
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 120px;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='120' viewBox='0 0 1200 120'><g fill='%23041109' fill-opacity='0.7'><path d='M0 120 V70 L60 70 L90 40 L120 70 L120 120 Z'/><path d='M160 120 V60 L160 40 L210 40 L210 60 L250 60 L250 120 Z'/><path d='M300 120 V50 L340 20 L380 50 L380 120 Z'/><path d='M430 120 V75 L430 55 L500 55 L500 75 L530 75 L530 120 Z'/><path d='M580 120 V45 L620 18 L660 45 L660 120 Z'/><path d='M710 120 V65 L710 45 L780 45 L780 120 Z'/><path d='M820 120 V52 L860 22 L900 52 L900 120 Z'/><path d='M950 120 V70 L950 50 L1020 50 L1020 70 L1050 70 L1050 120 Z'/><path d='M1100 120 V48 L1140 20 L1180 48 L1180 120 Z'/></g></svg>") repeat-x bottom center;
+      background-size: 1200px 120px;
+      pointer-events: none;
+    }
+    .hero .container { position: relative; z-index: 2; }
+    .hero .eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+      border: 1px solid rgba(224,193,114,0.4);
+      padding: 6px 16px;
+      border-radius: 30px;
+      margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: 3.1rem;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .hero h1 .hl { color: var(--gold); }
+    .hero p.sub {
+      font-size: 1.15rem;
+      color: #c4d8cd;
+      max-width: 640px;
+      margin: 18px auto 30px;
+    }
+
+    /* ============ SEARCH BAR ============ */
+    .search-wrap {
+      position: relative;
+      z-index: 10;
+      margin-top: -78px;
+      margin-bottom: 70px;
+    }
+    .search {
+      background: var(--green-panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 26px;
+      box-shadow: 0 24px 50px rgba(0,0,0,0.45);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted-dark);
+    }
+    .field input, .field select {
+      background: #06281c;
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #eaf3ee;
+      padding: 12px 13px;
+      border-radius: 7px;
+      font-size: 0.92rem;
+      width: 100%;
+    }
+    .field input::placeholder { color: #6f8a7d; }
+    .field select { appearance: none; cursor: pointer; }
+    .search .search-btn { grid-column: span 4; }
+    .search .search-btn .btn { width: 100%; padding: 15px; font-size: 1rem; }
+
+    /* ============ SECTION HEADINGS ============ */
+    .section-head { text-align: center; margin-bottom: 44px; }
+    .section-head h2 { font-size: 2rem; letter-spacing: -0.3px; }
+    .section-head p { color: var(--muted-light); margin-top: 8px; }
+    .on-dark .section-head h2 { color: #fff; }
+    .on-dark .section-head p { color: var(--muted-dark); }
+    .section-head .kicker {
+      display: inline-block;
+      color: var(--gold);
+      font-size: 0.76rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    /* ============ BROWSE BY TYPE ============ */
+    .browse { background: var(--green-850); color: #fff; padding: 80px 24px; }
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px 40px;
+    }
+    .type-grid a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: #cfe2d8;
+      padding: 12px 4px;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.95rem;
+      transition: color 0.2s ease, padding-left 0.2s ease;
+    }
+    .type-grid a:hover { color: var(--gold-bright); padding-left: 8px; }
+    .type-grid .count {
+      background: var(--gold);
+      color: #1c1305;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 20px;
+    }
+
+    /* ============ FEATURED LISTINGS ============ */
+    .featured { background: var(--green-800); color: #fff; padding: 80px 24px; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 26px;
+    }
+    .card {
+      background: var(--green-panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 18px 38px rgba(0,0,0,0.5); }
+    .card .photo {
+      position: relative;
+      height: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card .photo svg { width: 64px; height: 64px; opacity: 0.9; }
+    /* darker, muted gradient placeholders */
+    .card:nth-child(1) .photo { background: linear-gradient(135deg, #14422f, #082015); }
+    .card:nth-child(2) .photo { background: linear-gradient(135deg, #1c4a36, #0a261a); }
+    .card:nth-child(3) .photo { background: linear-gradient(135deg, #2a4030, #0f2317); }
+    .card:nth-child(4) .photo { background: linear-gradient(135deg, #3a3a22, #1c1d10); }
+    .card:nth-child(5) .photo { background: linear-gradient(135deg, #123d2c, #071d14); }
+    .card:nth-child(6) .photo { background: linear-gradient(135deg, #234436, #0c241a); }
+    .badge {
+      position: absolute;
+      top: 14px; left: 14px;
+      background: var(--gold);
+      color: #1c1305;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 5px;
+    }
+    .badge.style {
+      left: auto; right: 14px;
+      background: rgba(0,0,0,0.45);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .card .body { padding: 20px; }
+    .card .title { font-size: 1.12rem; font-weight: 600; color: #fff; }
+    .card .loc { color: var(--muted-dark); font-size: 0.88rem; margin-top: 4px; }
+    .card .price {
+      color: var(--mint);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-top: 14px;
+    }
+    .specs {
+      display: flex;
+      gap: 18px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: #b9d0c5;
+      font-size: 0.85rem;
+    }
+    .specs span { display: flex; align-items: center; gap: 6px; }
+
+    /* ============ ABOUT ============ */
+    .about { padding: 88px 24px; background: #fff; }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .about-logo {
+      background: var(--soft);
+      border: 1px solid #e4ece7;
+      border-radius: 16px;
+      padding: 54px;
+      text-align: center;
+    }
+    .about-logo img { width: 280px; max-width: 100%; height: auto; }
+    .about h2 { font-size: 2rem; color: var(--primary); margin-bottom: 16px; letter-spacing: -0.3px; }
+    .about p { color: var(--muted-light); font-size: 1.05rem; margin-bottom: 16px; }
+    .points { list-style: none; margin-top: 10px; }
+    .points li { position: relative; padding-left: 30px; margin-bottom: 12px; color: var(--ink); }
+    .points li::before {
+      content: "✓";
+      position: absolute; left: 0; top: 0;
+      color: #fff;
+      background: var(--primary);
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      font-size: 0.72rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ============ FOOTER ============ */
+    footer {
+      background: var(--green-900);
+      color: #c0d4c9;
+      padding: 60px 24px 30px;
+      border-top: 3px solid var(--gold);
+    }
+    .foot-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 36px; }
+    .foot-col { max-width: 280px; }
+    .foot-col h3 { color: #fff; font-size: 1.25rem; margin-bottom: 12px; }
+    .foot-col h4 { color: #fff; font-size: 0.95rem; margin-bottom: 12px; letter-spacing: 0.5px; }
+    .foot-col p, .foot-col a { color: #acc6ba; text-decoration: none; font-size: 0.93rem; }
+    .foot-col p { margin-bottom: 9px; }
+    .foot-col a:hover { color: var(--gold-bright); }
+    .social a {
+      display: inline-block;
+      margin-right: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .social a:hover { color: var(--gold-bright); }
+    .copyright {
+      border-top: 1px solid var(--line);
+      margin-top: 40px;
+      padding-top: 22px;
+      text-align: center;
+      font-size: 0.86rem;
+      color: #7e988b;
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 940px) {
+      .menu { display: none; }
+      .type-grid { grid-template-columns: repeat(2, 1fr); }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .search { grid-template-columns: repeat(2, 1fr); }
+      .search .search-btn { grid-column: span 2; }
+      .about-grid { grid-template-columns: 1fr; gap: 36px; }
+    }
+    @media (max-width: 560px) {
+      .hero h1 { font-size: 2.1rem; }
+      .cards { grid-template-columns: 1fr; }
+      .search { grid-template-columns: 1fr; }
+      .search .search-btn { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site">
+    <div class="container nav">
+      <a class="brand" href="#"><img src="brand_assets/logo.png" alt="Falcon Homes" /></a>
+      <nav>
+        <ul class="menu">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#listings">Listings</a></li>
+          <li><a href="#types">House Styles</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-cta">
+        <a class="login" href="#contact">Sign In</a>
+        <a class="btn" href="#listings">View Listings</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="home">
+    <div class="container">
+      <span class="eyebrow">Falcon Ridge · Modern Housing Community</span>
+      <h1>Move into your new home at <span class="hl">falcon speed</span></h1>
+      <p class="sub">Swift, seamless, and reliable — Falcon Homes gets your family into a move-in ready home faster, without ever compromising on quality.</p>
+      <a class="btn btn-gold" href="#listings">Browse Homes at Falcon Ridge</a>
+    </div>
+  </section>
+
+  <!-- ============ SEARCH BAR ============ -->
+  <div class="container search-wrap">
+    <form class="search" onsubmit="return false;">
+      <div class="field">
+        <label for="kw">Keyword</label>
+        <input id="kw" type="text" placeholder="e.g. modern, bungalow" />
+      </div>
+      <div class="field">
+        <label for="phase">Phase</label>
+        <select id="phase">
+          <option>Any phase</option>
+          <option>Falcon Ridge · Phase 1</option>
+          <option>Falcon Ridge · Phase 2</option>
+          <option>Falcon Ridge · Phase 3</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="style">House Style</label>
+        <select id="style">
+          <option>Any style</option>
+          <option>Modern Minimalist</option>
+          <option>Classic Bungalow</option>
+          <option>Two-Storey</option>
+          <option>Mediterranean</option>
+          <option>Craftsman</option>
+          <option>Contemporary Townhouse</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="beds">Bedrooms</label>
+        <select id="beds">
+          <option>Any</option>
+          <option>1+</option>
+          <option>2+</option>
+          <option>3+</option>
+          <option>4+</option>
+        </select>
+      </div>
+      <div class="search-btn">
+        <button class="btn btn-gold" type="submit">Search Homes</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============ FEATURED LISTINGS ============ -->
+  <section class="featured" id="listings">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">All Within Falcon Ridge</span>
+        <h2 style="color:#fff;">Home Styles for Sale</h2>
+        <p style="color:var(--muted-dark);">Same trusted community — six distinct house styles to suit your family.</p>
+      </div>
+      <div class="cards">
+        <!-- Card 1 -->
+        <article class="card">
+          <div class="photo">
+            <span class="badge">For Sale</span>
+            <span class="badge style">Modern Minimalist</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+          </div>
+          <div class="body">
+            <div class="title">The Aspen — Modern Minimalist</div>
+            <div class="loc">Falcon Ridge · Phase 1</div>
+            <div class="price">$248,000</div>
+            <div class="specs">
+              <span>🛏 3 Beds</span><span>🛁 2 Baths</span><span>📐 140 m²</span>
+            </div>
+          </div>
+        </article>
+        <!-- Card 2 -->
+        <article class="card">
+          <div class="photo">
+            <span class="badge">For Sale</span>
+            <span class="badge style">Classic Bungalow</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+          </div>
+          <div class="body">
+            <div class="title">The Willow — Classic Bungalow</div>
+            <div class="loc">Falcon Ridge · Phase 1</div>
+            <div class="price">$212,000</div>
+            <div class="specs">
+              <span>🛏 2 Beds</span><span>🛁 1 Bath</span><span>📐 110 m²</span>
+            </div>
+          </div>
+        </article>
+        <!-- Card 3 -->
+        <article class="card">
+          <div class="photo">
+            <span class="badge">For Sale</span>
+            <span class="badge style">Two-Storey</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+          </div>
+          <div class="body">
+            <div class="title">The Magnolia — Two-Storey</div>
+            <div class="loc">Falcon Ridge · Phase 2</div>
+            <div class="price">$365,000</div>
+            <div class="specs">
+              <span>🛏 4 Beds</span><span>🛁 3 Baths</span><span>📐 210 m²</span>
+            </div>
+          </div>
+        </article>
+        <!-- Card 4 -->
+        <article class="card">
+          <div class="photo">
+            <span class="badge">For Sale</span>
+            <span class="badge style">Mediterranean</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+          </div>
+          <div class="body">
+            <div class="title">The Sienna — Mediterranean Villa</div>
+            <div class="loc">Falcon Ridge · Phase 2</div>
+            <div class="price">$412,000</div>
+            <div class="specs">
+              <span>🛏 4 Beds</span><span>🛁 3 Baths</span><span>📐 240 m²</span>
+            </div>
+          </div>
+        </article>
+        <!-- Card 5 -->
+        <article class="card">
+          <div class="photo">
+            <span class="badge">For Sale</span>
+            <span class="badge style">Craftsman</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+          </div>
+          <div class="body">
+            <div class="title">The Cedar — Craftsman Cottage</div>
+            <div class="loc">Falcon Ridge · Phase 3</div>
+            <div class="price">$276,500</div>
+            <div class="specs">
+              <span>🛏 3 Beds</span><span>🛁 2 Baths</span><span>📐 155 m²</span>
+            </div>
+          </div>
+        </article>
+        <!-- Card 6 -->
+        <article class="card">
+          <div class="photo">
+            <span class="badge">For Sale</span>
+            <span class="badge style">Townhouse</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+          </div>
+          <div class="body">
+            <div class="title">The Linden — Contemporary Townhouse</div>
+            <div class="loc">Falcon Ridge · Phase 3</div>
+            <div class="price">$224,000</div>
+            <div class="specs">
+              <span>🛏 3 Beds</span><span>🛁 2 Baths</span><span>📐 130 m²</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BROWSE BY STYLE ============ -->
+  <section class="browse on-dark" id="types">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">One Community, Many Styles</span>
+        <h2>Browse by House Style</h2>
+        <p>Every style below is available right here at Falcon Ridge.</p>
+      </div>
+      <div class="type-grid">
+        <a href="#listings">Modern Minimalist <span class="count">8</span></a>
+        <a href="#listings">Classic Bungalow <span class="count">11</span></a>
+        <a href="#listings">Two-Storey <span class="count">14</span></a>
+        <a href="#listings">Mediterranean <span class="count">6</span></a>
+        <a href="#listings">Craftsman Cottage <span class="count">7</span></a>
+        <a href="#listings">Contemporary Townhouse <span class="count">9</span></a>
+        <a href="#listings">Single Family <span class="count">12</span></a>
+        <a href="#listings">Bungalow Duplex <span class="count">5</span></a>
+        <a href="#listings">Garden Home <span class="count">10</span></a>
+        <a href="#listings">Corner Unit Home <span class="count">4</span></a>
+        <a href="#listings">Loft Style <span class="count">3</span></a>
+        <a href="#listings">Family Estate <span class="count">6</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="about" id="about">
+    <div class="container about-grid">
+      <div class="about-logo">
+        <img src="brand_assets/logo.png" alt="Falcon Homes logo" />
+      </div>
+      <div>
+        <h2>About Falcon Homes</h2>
+        <p>
+          Falcon Homes builds and sells quality houses made for the way families
+          really live. At our Falcon Ridge community, you'll find a new,
+          dependable place to call home — in the house style that fits you best.
+        </p>
+        <p>And we move at falcon speed: from your first visit to the day you get your keys, we keep things fast, simple, honest, and reliable.</p>
+        <ul class="points">
+          <li>Move-in ready homes, keys faster</li>
+          <li>Six distinct home styles, one trusted community</li>
+          <li>A home you can count on, today and tomorrow</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer id="contact">
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-col">
+          <h3>Falcon Homes</h3>
+          <p>Reliable homes for families ready to put down roots at Falcon Ridge — delivered at falcon speed. Your new home starts here.</p>
+        </div>
+        <div class="foot-col">
+          <h4>Contact</h4>
+          <p>Email: <a href="mailto:hello@falconhomes.com">hello@falconhomes.com</a></p>
+          <p>Phone: <a href="tel:+10000000000">+1 (000) 000-0000</a></p>
+          <p>Falcon Ridge, 123 Greenfield Ave</p>
+        </div>
+        <div class="foot-col">
+          <h4>Follow Us</h4>
+          <div class="social">
+            <a href="#">Facebook</a>
+            <a href="#">Instagram</a>
+            <a href="#">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">
+        © 2026 Falcon Homes. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

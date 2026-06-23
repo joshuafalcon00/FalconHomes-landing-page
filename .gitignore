@@ -7,3 +7,20 @@ desktop.ini
 # Editor folders
 .vscode/
 .idea/
+
+.vercel
+
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Heavy source video (site uses the extracted frames + VIDEO.mp4 / Family.mp4)
+day2_video/falcon_seasons.mp4
+
+# Dev tooling / scratch (not part of the site)
+.agents/
+.claude/
+correction_reference/
+skills-lock.json
+images/coffee.png
