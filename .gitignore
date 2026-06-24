@@ -18,6 +18,15 @@ desktop.ini
 # Node dependencies
 node_modules/
 
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+# Generated QA artifacts (regenerated on every run)
+/tests/screenshots/
+/tests/qa-report.md
+
 # Heavy source video (site uses the extracted frames + VIDEO.mp4 / Family.mp4)
 day2_video/falcon_seasons.mp4
 brand_assets/Walkthrough.mp4

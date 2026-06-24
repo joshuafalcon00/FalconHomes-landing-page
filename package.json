@@ -4,8 +4,17 @@
   "private": true,
   "type": "module",
   "description": "Falcon Homes marketing site + serverless form handlers.",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
     "resend": "^6.14.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "dotenv": "^17.4.2"
   }
 }

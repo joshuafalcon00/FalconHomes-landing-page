@@ -6,3 +6,15 @@ skills-lock.json
 day2_video/falcon_seasons.mp4
 brand_assets/Walkthrough.mp4
 images/coffee.png
+
+# Secrets — never deploy
+.env
+.env.*
+!.env.example
+
+# Test tooling / artifacts (not part of the site)
+node_modules
+tests
+test-results
+playwright-report
+playwright.config.ts
