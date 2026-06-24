@@ -729,7 +729,7 @@
         <h2>Send us a message</h2>
         <p>Have a question about Falcon Ridge? Drop us a note and we'll reply at <span class="fs">Falcon Speed</span>.</p>
       </div>
-      <form class="contact-form" id="contactForm" novalidate>
+      <form class="contact-form" id="contactForm" action="/api/contact" method="POST" novalidate>
         <div class="field">
           <label for="cfName">Name <span class="req">*</span></label>
           <input id="cfName" name="name" type="text" placeholder="Maria Santos" required />
@@ -893,19 +893,49 @@
   </script>
 
   <script>
-    /* Contact form (above footer) — front-end only for now, no backend.
-       To deliver messages, POST the fields to a server endpoint here
-       (keep any API keys server-side, never in this client JS). */
+    /* Contact form (above footer) — POSTs to the /api/contact serverless function,
+       which inserts the message into Supabase. API keys stay server-side, never here. */
     (function () {
       var form = document.getElementById('contactForm');
       var confirm = document.getElementById('cfConfirm');
       if (!form) return;
+      var submitBtn = form.querySelector('button[type="submit"]');
+      var submitLabel = submitBtn ? submitBtn.textContent : '';
+
+      function showError(msg) {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitLabel; }
+        alert(msg || 'Sorry, we could not send your message. Please try again.');
+      }
+
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         if (!form.checkValidity()) { form.reportValidity(); return; }
-        form.classList.add('hidden');
-        confirm.classList.remove('hidden');
-        confirm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        var payload = {
+          name: document.getElementById('cfName').value.trim(),
+          email: document.getElementById('cfEmail').value.trim(),
+          message: document.getElementById('cfMessage').value.trim()
+        };
+
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
+
+        fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+          .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (data) {
+              return { ok: res.ok && data && data.ok, data: data || {} };
+            });
+          })
+          .then(function (result) {
+            if (!result.ok) { throw new Error(result.data.error); }
+            form.classList.add('hidden');
+            confirm.classList.remove('hidden');
+            confirm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          })
+          .catch(function (err) { showError(err && err.message); });
       });
     })();
   </script>

@@ -15,6 +15,9 @@ desktop.ini
 .env.*
 !.env.example
 
+# Node dependencies
+node_modules/
+
 # Heavy source video (site uses the extracted frames + VIDEO.mp4 / Family.mp4)
 day2_video/falcon_seasons.mp4
 brand_assets/Walkthrough.mp4

@@ -1,0 +1,10 @@
+{
+  "name": "falconhomes-landing-page",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Falcon Homes marketing site + serverless form handlers.",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}
