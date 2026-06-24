@@ -910,9 +910,11 @@
       var submitBtn = form.querySelector('button[type="submit"]');
       var submitLabel = submitBtn ? submitBtn.textContent : '';
 
-      var toast = document.getElementById('cfToast');
       var toastTimer;
       function showToast(msg, isError) {
+        // Look up #cfToast lazily: it's declared after this script, so capturing
+        // it at init time would be null and the toast would never show.
+        var toast = document.getElementById('cfToast');
         if (!toast) { if (isError) alert(msg); return; }
         toast.textContent = (isError ? '' : '✓ ') + msg;
         toast.classList.toggle('error', !!isError);
