@@ -379,6 +379,19 @@
     #get-in-touch .cf-confirm { max-width: 600px; margin: 0 auto; text-align: center; padding: 16px 0; }
     #get-in-touch .cf-confirm h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.5rem; color: #fff; margin-bottom: 8px; }
     #get-in-touch .cf-confirm p { color: rgba(255,255,255,0.92); }
+    /* Transient "sent" toast */
+    .cf-toast {
+      position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(14px);
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--primary); color: #fff; font-weight: 600; font-size: 0.98rem;
+      padding: 13px 24px; border-radius: 999px; box-shadow: 0 12px 34px rgba(0,0,0,0.28);
+      opacity: 0; visibility: hidden; pointer-events: none; z-index: 1200;
+      max-width: 90vw; text-align: center;
+      transition: opacity .3s ease, transform .3s ease;
+    }
+    .cf-toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+    .cf-toast.error { background: #b3261e; }
+    @media (prefers-reduced-motion: reduce) { .cf-toast { transition: opacity .2s ease; } }
     #get-in-touch .cf-cta { text-align: center; margin-top: 26px; }
     #get-in-touch .cf-cta p { color: rgba(255,255,255,0.92); margin-bottom: 14px; }
     @media (max-width: 560px) { #get-in-touch .contact-form { grid-template-columns: 1fr; } }
@@ -746,10 +759,6 @@
           <button class="btn" type="submit">Send message</button>
         </div>
       </form>
-      <div class="cf-confirm hidden" id="cfConfirm" role="status">
-        <h3>Thanks, your message is on its way</h3>
-        <p>A Falcon Homes advisor will reply to you soon.</p>
-      </div>
       <div class="cf-cta">
         <p>Already know the home you want?</p>
         <a class="btn" href="inquire.html">Inquire about a home</a>
@@ -897,14 +906,22 @@
        which inserts the message into Supabase. API keys stay server-side, never here. */
     (function () {
       var form = document.getElementById('contactForm');
-      var confirm = document.getElementById('cfConfirm');
       if (!form) return;
       var submitBtn = form.querySelector('button[type="submit"]');
       var submitLabel = submitBtn ? submitBtn.textContent : '';
 
-      function showError(msg) {
+      var toast = document.getElementById('cfToast');
+      var toastTimer;
+      function showToast(msg, isError) {
+        if (!toast) { if (isError) alert(msg); return; }
+        toast.textContent = (isError ? '' : '✓ ') + msg;
+        toast.classList.toggle('error', !!isError);
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toast.classList.remove('show'); }, isError ? 5000 : 3200);
+      }
+      function resetBtn() {
         if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitLabel; }
-        alert(msg || 'Sorry, we could not send your message. Please try again.');
       }
 
       form.addEventListener('submit', function (e) {
@@ -930,15 +947,21 @@
             });
           })
           .then(function (result) {
-            if (!result.ok) { throw new Error(result.data.error); }
-            form.classList.add('hidden');
-            confirm.classList.remove('hidden');
-            confirm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (!result.ok) { throw new Error(result.data.error || 'Could not send your message.'); }
+            // Success: keep the form usable, reset the button, clear fields, flash a toast.
+            resetBtn();
+            form.reset();
+            showToast('Message sent', false);
           })
-          .catch(function (err) { showError(err && err.message); });
+          .catch(function (err) {
+            resetBtn();
+            showToast(err && err.message ? err.message : 'Sorry, we could not send your message. Please try again.', true);
+          });
       });
     })();
   </script>
+
+  <div class="cf-toast" id="cfToast" role="status" aria-live="polite"></div>
 
 </body>
 </html>

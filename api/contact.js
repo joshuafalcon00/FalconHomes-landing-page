@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   body = body || {};
 
   const name = String(body.name || '').trim();
-  const email = String(body.email || '').trim();
+  const email = String(body.email || '').trim().toLowerCase();
   const message = String(body.message || '').trim();
 
   // Validate on the server (never trust the client alone).
@@ -46,6 +46,25 @@ export default async function handler(req, res) {
 
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Spam guard: cap messages per email within a rolling 24-hour window.
+    const MAX_PER_DAY = 5;
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const { count, error: countError } = await supabase
+      .from('messages')
+      .select('*', { count: 'exact', head: true })
+      .eq('email', email)
+      .gte('created_at', since);
+    if (countError) {
+      console.error('Supabase count error:', countError);
+      return res.status(500).json({ ok: false, error: 'Could not send your message. Please try again.' });
+    }
+    if (typeof count === 'number' && count >= MAX_PER_DAY) {
+      return res.status(429).json({
+        ok: false,
+        error: `You've reached the limit of ${MAX_PER_DAY} messages per day for this email. Please try again in 24 hours or email us directly.`,
+      });
+    }
 
     const { error } = await supabase
       .from('messages')

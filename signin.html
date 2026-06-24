@@ -104,10 +104,27 @@
     [data-theme="dark"] .link { color: var(--primary-bright); }
     .link:hover { text-decoration: underline; }
     .auth-card .btn { width: 100%; padding: 14px; font-size: 1rem; }
+    .auth-tabs { display: flex; gap: 6px; background: var(--soft); border: 1px solid var(--line); border-radius: 11px; padding: 5px; margin-bottom: 22px; }
+    .auth-tab { flex: 1; padding: 11px; border: none; background: transparent; color: var(--muted); font-weight: 600; font-size: 0.92rem; border-radius: 8px; cursor: pointer; font-family: inherit; transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; }
+    .auth-tab.is-active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 8px rgba(31,122,82,0.14); }
+    [data-theme="dark"] .auth-tab.is-active { color: var(--primary-bright); }
+    .field[hidden] { display: none; }
     .alt { text-align: center; color: var(--muted); font-size: 0.92rem; margin-top: 18px; }
     .note { display: none; margin-top: 16px; padding: 14px 16px; border-radius: 10px; background: var(--soft); border: 1px solid rgba(31,122,82,0.2); color: var(--ink); font-size: 0.92rem; }
     .note a { color: var(--primary); font-weight: 600; }
     [data-theme="dark"] .note a { color: var(--primary-bright); }
+    /* Transient toast for welcome / errors */
+    .toast {
+      position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(14px);
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--primary); color: #fff; font-weight: 600; font-size: 0.98rem;
+      padding: 13px 24px; border-radius: 999px; box-shadow: 0 12px 34px rgba(0,0,0,0.28);
+      opacity: 0; visibility: hidden; pointer-events: none; z-index: 1200;
+      max-width: 90vw; text-align: center;
+      transition: opacity .3s ease, transform .3s ease;
+    }
+    .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+    .toast.error { background: #b3261e; }
 
     .cta { text-align: center; padding: 0 24px 80px; }
     .cta h2 { font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 600; color: var(--ink); }
@@ -180,7 +197,15 @@
 
     <!-- ============ SIGN-IN FORM ============ -->
     <section class="auth-wrap">
-      <form class="auth-card" id="signinForm" novalidate>
+      <form class="auth-card" id="authForm" novalidate>
+        <div class="auth-tabs" role="tablist" aria-label="Sign in or sign up">
+          <button class="auth-tab is-active" id="tabSignin" type="button" role="tab" aria-selected="true">Sign in</button>
+          <button class="auth-tab" id="tabSignup" type="button" role="tab" aria-selected="false">Sign up</button>
+        </div>
+        <div class="field signup-only" id="nameField" hidden>
+          <label for="name">Full name</label>
+          <input id="name" name="name" type="text" placeholder="Maria Santos" autocomplete="name" />
+        </div>
         <div class="field">
           <label for="email">Email</label>
           <input id="email" name="email" type="email" placeholder="you@email.com" required autocomplete="email" />
@@ -189,12 +214,12 @@
           <label for="password">Password</label>
           <input id="password" name="password" type="password" placeholder="Your password" required autocomplete="current-password" />
         </div>
-        <div class="row">
+        <div class="row" id="signinRow">
           <label class="remember"><input type="checkbox" id="remember" /> Remember me</label>
           <a class="link" href="inquire.html">Forgot password?</a>
         </div>
-        <button class="btn" type="submit">Sign in</button>
-        <p class="alt">New to Falcon Ridge? <a class="link" href="inquire.html">Inquire about a home</a></p>
+        <button class="btn" type="submit" id="authSubmit">Sign in</button>
+        <p class="alt" id="authAlt">New to Falcon Ridge? <a class="link" href="#signup" id="altToggle">Create an account</a></p>
         <div class="note" id="signinNote">Accounts aren't open yet. To get started, <a href="inquire.html">send an inquiry</a> and an advisor will set you up.</div>
       </form>
     </section>
@@ -243,13 +268,128 @@
         document.documentElement.setAttribute('data-theme', next);
         try { localStorage.setItem('fh-theme', next); } catch (e) {}
       });
-      var form = document.getElementById('signinForm');
+      var form = document.getElementById('authForm');
       var note = document.getElementById('signinNote');
+      var nameField = document.getElementById('nameField');
+      var nameInput = document.getElementById('name');
+      var pwInput = document.getElementById('password');
+      var signinRow = document.getElementById('signinRow');
+      var submitBtn = document.getElementById('authSubmit');
+      var altP = document.getElementById('authAlt');
+      var tabSignin = document.getElementById('tabSignin');
+      var tabSignup = document.getElementById('tabSignup');
+      var heroEyebrow = document.querySelector('.hero .eyebrow');
+      var heroTitle = document.querySelector('.hero h1');
+
+      function bindAlt() {
+        var altToggle = document.getElementById('altToggle');
+        if (altToggle) altToggle.addEventListener('click', function (e) {
+          e.preventDefault();
+          setMode(tabSignup.classList.contains('is-active') ? 'signin' : 'signup');
+        });
+      }
+
+      function setMode(mode) {
+        var signup = mode === 'signup';
+        tabSignin.classList.toggle('is-active', !signup);
+        tabSignup.classList.toggle('is-active', signup);
+        tabSignin.setAttribute('aria-selected', String(!signup));
+        tabSignup.setAttribute('aria-selected', String(signup));
+        if (nameField) nameField.hidden = !signup;
+        if (nameInput) nameInput.required = signup;
+        if (signinRow) signinRow.style.display = signup ? 'none' : 'flex';
+        if (submitBtn) submitBtn.textContent = signup ? 'Create account' : 'Sign in';
+        if (pwInput) pwInput.setAttribute('autocomplete', signup ? 'new-password' : 'current-password');
+        if (altP) altP.innerHTML = signup
+          ? 'Already have an account? <a class="link" href="#signin" id="altToggle">Sign in</a>'
+          : 'New to Falcon Ridge? <a class="link" href="#signup" id="altToggle">Create an account</a>';
+        bindAlt();
+        if (heroEyebrow) heroEyebrow.textContent = signup ? 'Get started' : 'Welcome back';
+        if (heroTitle) heroTitle.innerHTML = signup
+          ? 'Create your <span class="fs">Falcon Homes</span> account'
+          : 'Sign in to <span class="fs">Falcon Homes</span>';
+        if (note) note.style.display = 'none';
+        try { document.title = (signup ? 'Sign Up' : 'Sign In') + ' · Falcon Homes'; } catch (e) {}
+      }
+
+      if (tabSignin) tabSignin.addEventListener('click', function () { setMode('signin'); });
+      if (tabSignup) tabSignup.addEventListener('click', function () { setMode('signup'); });
+      bindAlt();
+      if (location.hash === '#signup') setMode('signup');
+
+      var toast = document.getElementById('authToast');
+      var toastTimer;
+      function showToast(msg, isError) {
+        if (!toast) { if (isError) alert(msg); return; }
+        toast.textContent = (isError ? '' : '✓ ') + msg;
+        toast.classList.toggle('error', !!isError);
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toast.classList.remove('show'); }, isError ? 5500 : 5000);
+      }
+      function showNote(html) {
+        if (!note) return;
+        note.innerHTML = html;
+        note.style.display = 'block';
+        note.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      function formatDate(iso) {
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return iso;
+        var months = ['January','February','March','April','May','June','July',
+                      'August','September','October','November','December'];
+        var h = d.getHours(), ampm = h >= 12 ? 'PM' : 'AM', h12 = h % 12 || 12;
+        var m = d.getMinutes(); m = (m < 10 ? '0' : '') + m;
+        return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' ' + h12 + ':' + m + ' ' + ampm;
+      }
+
       if (form) form.addEventListener('submit', function (e) {
         e.preventDefault();
         if (!form.checkValidity()) { form.reportValidity(); return; }
-        note.style.display = 'block';
-        note.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        var signup = tabSignup.classList.contains('is-active');
+        var email = document.getElementById('email').value.trim();
+        var password = document.getElementById('password').value;
+        var origLabel = submitBtn ? submitBtn.textContent : '';
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = signup ? 'Creating account…' : 'Signing in…'; }
+        if (note) note.style.display = 'none';
+
+        var url = signup ? '/api/signup' : '/api/signin';
+        var payload = signup
+          ? { name: (nameInput ? nameInput.value.trim() : ''), email: email, password: password }
+          : { email: email, password: password };
+
+        fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+          .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (data) {
+              return { ok: res.ok && data && data.ok, data: data || {} };
+            });
+          })
+          .then(function (result) {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origLabel; }
+            if (!result.ok) { throw new Error(result.data.error || 'Something went wrong. Please try again.'); }
+
+            if (signup) {
+              showToast('Account created', false);
+              showNote('Almost there! Please <strong>check your email</strong> to confirm your account, then sign in.');
+              form.reset();
+            } else {
+              var nm = result.data.name ? (' ' + result.data.name) : '';
+              showToast('Welcome' + nm, false);
+              if (result.data.lastSignInAt) {
+                showNote('Last seen: ' + formatDate(result.data.lastSignInAt));
+              }
+              form.reset();
+            }
+          })
+          .catch(function (err) {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origLabel; }
+            showToast(err && err.message ? err.message : 'Something went wrong. Please try again.', true);
+          });
       });
     })();
   </script>
@@ -272,6 +412,8 @@
       window.addEventListener('resize', function () { if (window.innerWidth > 940) close(); });
     })();
   </script>
+
+  <div class="toast" id="authToast" role="status" aria-live="polite"></div>
 
 </body>
 </html>
