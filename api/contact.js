@@ -4,11 +4,18 @@
 // service role key is NOT used here (the anon key is enough for an insert).
 
 import { createClient } from '@supabase/supabase-js';
+import { Resend } from 'resend';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
 
 export default async function handler(req, res) {
   // CORS: allow cross-origin calls (local dev, custom domains) and preflight.
@@ -80,6 +87,31 @@ export default async function handler(req, res) {
       // Log server-side for debugging; keep the client message generic.
       console.error('Supabase insert error:', error);
       return res.status(500).json({ ok: false, error: 'Could not save your message. Please try again.' });
+    }
+
+    // Best-effort confirmation email via Resend. The submission is already saved,
+    // so a failed/missing email must NOT fail the request.
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        await resend.emails.send({
+          from: 'Falcon Homes <onboarding@resend.dev>',
+          to: email,
+          subject: `Thanks for reaching out, ${name}`,
+          text:
+            `Hi ${name},\n\n` +
+            `Thanks for reaching out to Falcon Homes. Your message landed safely, and a Falcon Ridge advisor will get back to you at Falcon Speed.\n\n` +
+            `While you wait, feel free to explore the homes ready now at Falcon Ridge.\n\n` +
+            `Warmly,\nThe Falcon Homes team`,
+          html:
+            `<p>Hi ${escapeHtml(name)},</p>` +
+            `<p>Thanks for reaching out to <strong>Falcon Homes</strong>. Your message landed safely, and a Falcon Ridge advisor will get back to you at <em>Falcon Speed</em>.</p>` +
+            `<p>While you wait, feel free to explore the homes ready now at Falcon Ridge.</p>` +
+            `<p>Warmly,<br>The Falcon Homes team</p>`,
+        });
+      } catch (emailErr) {
+        console.error('Resend email error (submission still saved):', emailErr);
+      }
     }
 
     return res.status(200).json({ ok: true, message: 'Thanks, your message was received.' });

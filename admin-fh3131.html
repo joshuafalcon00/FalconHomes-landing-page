@@ -124,6 +124,31 @@
     .show-more { background: var(--surface); color: var(--primary-dark); border: 1.5px solid rgba(31,122,82,0.32); padding: 9px 20px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; font-family: inherit; min-height: 40px; }
     [data-theme="dark"] .show-more { color: var(--primary-bright); border-color: rgba(92,165,133,0.4); }
     .show-more:hover { border-color: var(--primary); }
+
+    /* Accounts section: delete button, confirm modal, toast */
+    td.actions { white-space: nowrap; }
+    .btn-danger { background: #fff; color: #c0392b; border: 1.5px solid rgba(192,57,43,0.4); padding: 7px 14px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; font-family: inherit; min-height: 34px; transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease; }
+    .btn-danger:hover { background: #c0392b; color: #fff; border-color: #c0392b; }
+    [data-theme="dark"] .btn-danger { background: var(--surface); color: #e8897e; border-color: rgba(232,137,126,0.45); }
+    [data-theme="dark"] .btn-danger:hover { background: #c0392b; color: #fff; }
+
+    .modal-back { position: fixed; inset: 0; z-index: 200; background: rgba(5,16,11,0.62); display: flex; align-items: center; justify-content: center; padding: 22px; opacity: 0; pointer-events: none; transition: opacity 0.18s ease; }
+    .modal-back.show { opacity: 1; pointer-events: auto; }
+    .modal-card { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 16px; max-width: 420px; width: 100%; padding: 26px 24px 22px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); transform: translateY(8px); transition: transform 0.18s ease; }
+    .modal-back.show .modal-card { transform: translateY(0); }
+    .modal-card h3 { font-size: 1.15rem; margin-bottom: 8px; color: var(--ink); }
+    .modal-card p { color: var(--muted); font-size: 0.95rem; margin-bottom: 4px; }
+    .modal-card .who { color: var(--ink); font-weight: 600; word-break: break-all; margin: 8px 0 18px; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .modal-actions .btn-no { background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); padding: 9px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit; min-height: 40px; }
+    .modal-actions .btn-no:hover { border-color: var(--primary); }
+    .modal-actions .btn-yes { background: #c0392b; color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit; min-height: 40px; }
+    .modal-actions .btn-yes:hover { background: #a93226; }
+    .modal-actions .btn-yes[disabled] { opacity: 0.6; cursor: default; }
+
+    .toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 16px); z-index: 210; background: var(--primary-dark); color: #fff; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 0.92rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .toast.error { background: #c0392b; }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
 </head>
@@ -171,6 +196,22 @@
 
   <footer>© 2026 Falcon Homes · Admin (internal)</footer>
 
+  <!-- Delete confirmation modal -->
+  <div class="modal-back" id="confirmBack" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" hidden>
+    <div class="modal-card">
+      <h3 id="confirmTitle">Delete this account?</h3>
+      <p>Do you really want to delete this account? This permanently removes the login from Supabase Auth. This cannot be undone.</p>
+      <div class="who" id="confirmWho"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-no" id="confirmNo">No, keep it</button>
+        <button type="button" class="btn-yes" id="confirmYes">Yes, delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <script>
     /* Theme toggle */
     (function () {
@@ -197,7 +238,11 @@
         { table: 'signin',    title: 'Sign-ins',  empty: 'No sign-ins yet.',
           cols: [['created_at','Date','date'],['email','Email','email']] },
         { table: 'inquiries', title: 'Inquiries', empty: 'No inquiries yet.',
-          cols: [['created_at','Date','date'],['first_name','First','name'],['last_name','Last','name'],['email','Email','email'],['phone','Phone','email'],['pref_home','Home','msg'],['budget','Budget','msg'],['timeframe','Timeframe','msg']] }
+          cols: [['created_at','Date','date'],['first_name','First','name'],['last_name','Last','name'],['email','Email','email'],['phone','Phone','email'],['pref_home','Home','msg'],['budget','Budget','msg'],['timeframe','Timeframe','msg']] },
+        // Accounts is special: it is NOT a Supabase table read with the anon key.
+        // It is served by the protected /api/admin-users function (service role, server-side).
+        { table: 'accounts', kind: 'accounts', title: 'Accounts', empty: 'No accounts yet.',
+          cols: [['email','Email','email'],['name','Name','name'],['created_at','Created','date'],['email_confirmed_at','Confirmed','date'],['last_sign_in_at','Last sign-in','date'],['id','Action','actions']] }
       ];
 
       var host = document.getElementById('sections');
@@ -224,8 +269,12 @@
       }
       function cell(row, col) {
         var v = row[col[0]], type = col[2];
-        if (type === 'date') return '<td class="date">' + fmtDate(v) + '</td>';
+        if (type === 'date') return '<td class="date">' + (v ? fmtDate(v) : '—') + '</td>';
         if (type === 'msg')  return '<td class="msg">' + (v ? esc(v) : '—') + '</td>';
+        if (type === 'actions') {
+          return '<td class="actions"><button type="button" class="btn-danger" data-del="' +
+            esc(row.id) + '" data-email="' + esc(row.email || '') + '">Delete</button></td>';
+        }
         return '<td class="' + type + '">' + (v ? esc(v) : '—') + '</td>';
       }
       function matches(row, q) {
@@ -299,6 +348,10 @@
           cfg._tabBtn.classList.toggle('is-active', on);
         });
         updateTopCount();
+        // Accounts are loaded lazily (first time the tab is opened) so the admin
+        // password is only requested when you actually need it.
+        var cur = SECTIONS.filter(function (c) { return c.table === table; })[0];
+        if (cur && cur.kind === 'accounts' && !cur._loaded) loadAccounts(cur);
       }
       function updateTopCount() {
         var cfg = SECTIONS.filter(function (c) { return c.table === active; })[0];
@@ -311,13 +364,117 @@
         updateTopCount();
       }
 
+      /* ---- Toast ---- */
+      var toastEl = document.getElementById('toast');
+      var toastTimer = null;
+      function toast(msg, isError) {
+        if (!toastEl) return;
+        toastEl.textContent = msg;
+        toastEl.classList.toggle('error', !!isError);
+        toastEl.classList.add('show');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2600);
+      }
+
+      /* ---- Admin secret (asked once per browser session, kept in sessionStorage) ---- */
+      function getSecret(forcePrompt) {
+        var s = forcePrompt ? '' : (sessionStorage.getItem('fh-admin-secret') || '');
+        if (!s) {
+          s = window.prompt('Enter the admin password to manage accounts:') || '';
+          if (s) sessionStorage.setItem('fh-admin-secret', s);
+        }
+        return s;
+      }
+      function stateRow(cfg, msg, isError) {
+        cfg._tbody.innerHTML = '<tr><td class="state' + (isError ? ' error' : '') +
+          '" colspan="' + cfg.cols.length + '">' + esc(msg) + '</td></tr>';
+      }
+
+      /* ---- Load accounts from the protected serverless function ---- */
+      function loadAccounts(cfg, forcePrompt) {
+        var secret = getSecret(forcePrompt);
+        if (!secret) { stateRow(cfg, 'Admin password required to view accounts.', true); return; }
+        stateRow(cfg, 'Loading…', false);
+        fetch('/api/admin-users', { headers: { 'x-admin-secret': secret } })
+          .then(function (r) { return r.json().then(function (j) { return { status: r.status, j: j }; }); })
+          .then(function (o) {
+            if (o.status === 401) {
+              sessionStorage.removeItem('fh-admin-secret');
+              stateRow(cfg, 'Wrong admin password. Click the Accounts tab again to retry.', true);
+              return;
+            }
+            if (!o.j || !o.j.ok) { stateRow(cfg, (o.j && o.j.error) || 'Could not load accounts.', true); return; }
+            cfg._loaded = true;
+            store[cfg.table] = o.j.users || [];
+            renderSection(cfg);
+          })
+          .catch(function () {
+            stateRow(cfg, 'Could not reach the server. The Accounts API only runs on the deployed site (or via "vercel dev"), not the plain local file server.', true);
+          });
+      }
+
+      /* ---- Delete confirmation modal ---- */
+      var modalBack = document.getElementById('confirmBack');
+      var modalWho = document.getElementById('confirmWho');
+      var btnYes = document.getElementById('confirmYes');
+      var btnNo = document.getElementById('confirmNo');
+      var pending = null;  // { id, email, cfg }
+
+      function openConfirm(id, email, cfg) {
+        pending = { id: id, email: email, cfg: cfg };
+        modalWho.textContent = email || id;
+        modalBack.hidden = false;
+        requestAnimationFrame(function () { modalBack.classList.add('show'); });
+        btnYes.disabled = false; btnYes.textContent = 'Yes, delete';
+      }
+      function closeConfirm() {
+        modalBack.classList.remove('show');
+        setTimeout(function () { modalBack.hidden = true; }, 180);
+        pending = null;
+      }
+      if (btnNo) btnNo.addEventListener('click', closeConfirm);
+      if (modalBack) modalBack.addEventListener('click', function (e) { if (e.target === modalBack) closeConfirm(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modalBack && !modalBack.hidden) closeConfirm(); });
+
+      if (btnYes) btnYes.addEventListener('click', function () {
+        if (!pending) return;
+        var p = pending;
+        var secret = sessionStorage.getItem('fh-admin-secret') || '';
+        btnYes.disabled = true; btnYes.textContent = 'Deleting…';
+        fetch('/api/admin-users', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json', 'x-admin-secret': secret },
+          body: JSON.stringify({ id: p.id })
+        })
+          .then(function (r) { return r.json().then(function (j) { return { status: r.status, j: j }; }); })
+          .then(function (o) {
+            if (!o.j || !o.j.ok) { toast((o.j && o.j.error) || 'Delete failed.', true); btnYes.disabled = false; btnYes.textContent = 'Yes, delete'; return; }
+            // Remove the row locally and re-render.
+            store[p.cfg.table] = (store[p.cfg.table] || []).filter(function (u) { return u.id !== p.id; });
+            renderSection(p.cfg);
+            closeConfirm();
+            toast('Account deleted: ' + (p.email || p.id), false);
+          })
+          .catch(function () { toast('Network error. Could not delete.', true); btnYes.disabled = false; btnYes.textContent = 'Yes, delete'; });
+      });
+
       buildTabs();
       SECTIONS.forEach(buildSection);
+
+      // Delegated click handler for the Delete buttons in the Accounts table.
+      var accountsCfg = SECTIONS.filter(function (c) { return c.kind === 'accounts'; })[0];
+      if (accountsCfg) accountsCfg._tbody.addEventListener('click', function (e) {
+        var btn = e.target.closest && e.target.closest('button[data-del]');
+        if (!btn) return;
+        openConfirm(btn.getAttribute('data-del'), btn.getAttribute('data-email'), accountsCfg);
+      });
+
       setActive(active);
       searchEl.addEventListener('input', onSearch);
 
       if (!window.supabase || !window.supabase.createClient) {
         SECTIONS.forEach(function (cfg) {
+          if (cfg.kind === 'accounts') return;
           cfg._tbody.innerHTML = '<tr><td class="state error" colspan="' + cfg.cols.length + '">Could not load the Supabase client.</td></tr>';
         });
         return;
@@ -325,6 +482,7 @@
       var client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
       SECTIONS.forEach(function (cfg) {
+        if (cfg.kind === 'accounts') return;   // accounts come from the serverless function, not the anon client
         client.from(cfg.table)
           .select(cfg.cols.map(function (c) { return c[0]; }).join(','))
           .order('created_at', { ascending: false })   // newest first

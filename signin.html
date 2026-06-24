@@ -382,9 +382,13 @@
             }
 
             if (signup) {
-              showToast('Account created', false);
-              showNote('Almost there! Please <strong>check your email</strong> to confirm your account, then sign in.');
+              showToast('Account created · please sign in', false);
               form.reset();
+              // Take them straight to the Sign in view to enter their credentials.
+              setMode('signin');
+              var emailEl = document.getElementById('email'); if (emailEl) emailEl.value = email;
+              var pwEl = document.getElementById('password'); if (pwEl) pwEl.focus();
+              showNote('Account created! Please <strong>check your email</strong> to confirm your account, then sign in below.');
             } else {
               var nm = result.data.name ? (' ' + result.data.name) : '';
               showToast('Welcome' + nm, false);
