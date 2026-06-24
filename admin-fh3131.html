@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Submissions · Falcon Homes Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,600&family=Marcellus&family=Outfit:wght@500;600;700&family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('fh-theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --primary: #1F7A52; --primary-bright: #2A9460; --primary-dark: #155C3E;
+      --bg: #FFFFFF; --surface: #FFFFFF; --soft: #F4F8F5; --soft-2: #EAF3EE;
+      --ink: #14241D; --muted: #5C6F66; --line: rgba(20,40,30,0.10);
+      --header-bg: rgba(255,255,255,0.92); --green-deep: #0B2A1E;
+      --glow: 0 4px 14px rgba(31,122,82,0.26); --glow-strong: 0 8px 24px rgba(31,122,82,0.40);
+      --font-head: "Poppins", "Segoe UI", system-ui, sans-serif;
+      --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    }
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --primary: #2E8A63; --primary-bright: #5CA585; --primary-dark: #246B4D;
+      --bg: #0F1311; --surface: #171D1A; --soft: #131816; --soft-2: #1C2420;
+      --ink: #ECF1EF; --muted: #9AA7A1; --line: rgba(255,255,255,0.12);
+      --header-bg: rgba(15,19,17,0.90); --green-deep: #0A0E0C;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); color: var(--ink); background: var(--bg); line-height: 1.55; -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; transition: background 0.3s ease, color 0.3s ease; }
+    h1, h2, h3 { font-family: var(--font-head); letter-spacing: -0.02em; line-height: 1.2; }
+    .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--primary); color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; min-height: 40px; transition: background 0.2s ease, transform 0.15s ease; }
+    .btn:hover { background: var(--primary-bright); transform: translateY(-1px); }
+    .btn-ghost { background: var(--surface); color: var(--primary-dark); border: 1.5px solid rgba(31,122,82,0.32); }
+    [data-theme="dark"] .btn-ghost { color: var(--primary-bright); border-color: rgba(92,165,133,0.40); }
+    a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 6px; }
+
+    header.site { background: var(--header-bg); backdrop-filter: saturate(1.1) blur(8px); position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--line); }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
+    .brand-logo { width: 38px; height: 38px; object-fit: cover; object-position: left center; display: block; filter: drop-shadow(0 0 5px rgba(31,122,82,0.6)); }
+    [data-theme="dark"] .brand-logo { filter: drop-shadow(0 0 6px rgba(92,165,133,0.75)); }
+    .wordmark { display: inline-flex; align-items: baseline; gap: 0.1em; line-height: 1; white-space: nowrap; font-size: 1.32rem; }
+    .wm-falcon { font-family: "Marcellus", Georgia, serif; color: var(--ink); }
+    .wm-homes { font-family: "Outfit", var(--font-body); font-weight: 600; font-size: 1.32em; color: var(--primary); }
+    [data-theme="dark"] .wm-homes { color: var(--primary-bright); }
+    .admin-tag { font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: var(--primary); border: 1px solid rgba(31,122,82,0.3); padding: 3px 8px; border-radius: 20px; margin-left: 4px; }
+    [data-theme="dark"] .admin-tag { color: var(--primary-bright); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .theme-toggle { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+    .theme-toggle:hover { border-color: var(--primary); }
+    .theme-toggle svg { width: 18px; height: 18px; }
+    .theme-toggle .icon-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+    main { flex: 1 0 auto; padding: 34px 0 70px; }
+    .head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-bottom: 22px; }
+    .head-row h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); color: var(--ink); }
+    .count { display: inline-flex; align-items: baseline; gap: 7px; margin-top: 6px; color: var(--muted); font-size: 0.95rem; }
+    .count b { font-family: var(--font-head); font-size: 1.15rem; color: var(--primary); }
+    [data-theme="dark"] .count b { color: var(--primary-bright); }
+    .search { position: relative; }
+    .search input { width: 300px; max-width: 70vw; background: var(--surface); border: 1px solid var(--line); color: var(--ink); padding: 11px 14px; border-radius: 9px; font-size: 0.95rem; font-family: inherit; }
+    .search input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(31,122,82,0.12); }
+    .search input::placeholder { color: #9bada4; }
+
+    .table-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    thead th { text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; padding: 14px 16px; border-bottom: 1px solid var(--line); background: var(--soft); white-space: nowrap; }
+    tbody td { padding: 13px 16px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--soft); }
+    td.date { white-space: nowrap; color: var(--muted); }
+    td.name { font-weight: 600; white-space: nowrap; }
+    td.email { white-space: nowrap; }
+    td.msg { color: var(--muted); min-width: 240px; }
+    .state { padding: 34px 16px; text-align: center; color: var(--muted); }
+    .state.error { color: #c0392b; }
+    [data-theme="dark"] .state.error { color: #e8897e; }
+    .adm-section { margin-bottom: 34px; }
+    .sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+    .sec-head h2 { font-size: 1.2rem; color: var(--ink); }
+    .sec-count { color: var(--muted); font-size: 0.9rem; }
+    .sec-count b { color: var(--primary); font-family: var(--font-head); }
+    [data-theme="dark"] .sec-count b { color: var(--primary-bright); }
+
+    footer { background: var(--green-deep); color: #8fae9f; padding: 20px 0; text-align: center; font-size: 0.8rem; flex-shrink: 0; }
+
+    @media (max-width: 560px) { .nav { height: 60px; } .head-row { align-items: flex-start; } }
+    /* Fixed video background — same treatment as the homepage hero */
+    html { background: var(--green-deep); }
+    body { background: transparent; }
+    .bg-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+    .bg-overlay { position: fixed; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5,20,14,0.58) 0%, rgba(5,20,14,0.72) 100%); }
+    /* Text that sits directly over the video stays light/legible in both themes */
+    .head-row h1 { color: #fff; }
+    .count { color: rgba(255,255,255,0.85); }
+    .sec-head h2 { color: #fff; }
+    .sec-count { color: rgba(255,255,255,0.82); }
+    .sec-count b, [data-theme="dark"] .sec-count b { color: #8FE3B7; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .tab-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-weight: 600; font-size: 0.9rem; cursor: pointer; font-family: inherit; transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+    .tab-btn:hover { border-color: var(--primary); }
+    .tab-btn.is-active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: var(--glow); }
+    .tab-btn .tab-count { font-family: var(--font-head); font-size: 0.78rem; opacity: 0.85; }
+    .adm-section[hidden] { display: none; }
+    .show-more-wrap { text-align: center; padding: 16px 0 2px; }
+    .show-more { background: var(--surface); color: var(--primary-dark); border: 1.5px solid rgba(31,122,82,0.32); padding: 9px 20px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; font-family: inherit; min-height: 40px; }
+    [data-theme="dark"] .show-more { color: var(--primary-bright); border-color: rgba(92,165,133,0.4); }
+    .show-more:hover { border-color: var(--primary); }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+
+  <video class="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+    <source src="brand_assets/VIDEO.mp4" type="video/mp4" />
+  </video>
+  <div class="bg-overlay"></div>
+
+  <header class="site">
+    <div class="container nav">
+      <div class="brand">
+        <img class="brand-logo" src="brand_assets/logo.png" alt="Falcon Homes logo" />
+        <span class="wordmark" aria-label="Falcon Homes"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></span>
+        <span class="admin-tag">Admin</span>
+      </div>
+      <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+        <a class="btn btn-ghost" href="index.html">Back to site</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="head-row">
+        <div>
+          <h1>Submissions</h1>
+          <div class="count"><b id="total">—</b> <span id="totalLabel">total records</span></div>
+        </div>
+        <div class="search">
+          <input id="search" type="search" placeholder="Search by name or email…" autocomplete="off" aria-label="Search by name or email" />
+        </div>
+      </div>
+
+      <div class="tabs" id="tabs"></div>
+
+      <div id="sections"></div>
+    </div>
+  </main>
+
+  <footer>© 2026 Falcon Homes · Admin (internal)</footer>
+
+  <script>
+    /* Theme toggle */
+    (function () {
+      var t = document.getElementById('themeToggle');
+      if (t) t.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('fh-theme', next); } catch (e) {}
+      });
+    })();
+
+    /* Submissions: fetch from Supabase with the JS client, render, search.
+       NOTE (Day 3): the anon key below is intentionally exposed in the browser.
+       Reads work because RLS is disabled on this table. Real security comes later. */
+    (function () {
+      var SUPABASE_URL = 'https://cxuhtfatlxggvmrsrdzo.supabase.co';
+      var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dWh0ZmF0bHhnZ3ZtcnNyZHpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyOTY2ODUsImV4cCI6MjA5Nzg3MjY4NX0.mKBvMRZ2RDzTi5qgAauPXtfkLP3dbnFhEOM0H7rbwMQ';
+      // One section per Supabase table. type controls the cell style.
+      var SECTIONS = [
+        { table: 'messages',  title: 'Messages',  empty: 'No messages yet.',
+          cols: [['created_at','Date','date'],['name','Name','name'],['email','Email','email'],['message','Message','msg']] },
+        { table: 'signups',   title: 'Sign-ups',  empty: 'No rows readable here. This table has RLS enabled (the secure default), so the public anon key cannot read it. Listing it needs a server-side function using the service role.',
+          cols: [['created_at','Date','date'],['name','Name','name'],['email','Email','email']] },
+        { table: 'signin',    title: 'Sign-ins',  empty: 'No sign-ins yet.',
+          cols: [['created_at','Date','date'],['email','Email','email']] },
+        { table: 'inquiries', title: 'Inquiries', empty: 'No inquiries yet.',
+          cols: [['created_at','Date','date'],['first_name','First','name'],['last_name','Last','name'],['email','Email','email'],['phone','Phone','email'],['pref_home','Home','msg'],['budget','Budget','msg'],['timeframe','Timeframe','msg']] }
+      ];
+
+      var host = document.getElementById('sections');
+      var tabsEl = document.getElementById('tabs');
+      var searchEl = document.getElementById('search');
+      var totalEl = document.getElementById('total');
+      var totalLabel = document.getElementById('totalLabel');
+      var store = {};
+      var PAGE = 20;                 // rows shown per table before "Show more"
+      var active = SECTIONS[0].table;
+
+      function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+      function fmtDate(iso) {
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return esc(iso);
+        var M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var h = d.getHours(), ap = h >= 12 ? 'PM' : 'AM', h12 = h % 12 || 12;
+        var m = d.getMinutes(); m = (m < 10 ? '0' : '') + m;
+        return M[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' ' + h12 + ':' + m + ' ' + ap;
+      }
+      function cell(row, col) {
+        var v = row[col[0]], type = col[2];
+        if (type === 'date') return '<td class="date">' + fmtDate(v) + '</td>';
+        if (type === 'msg')  return '<td class="msg">' + (v ? esc(v) : '—') + '</td>';
+        return '<td class="' + type + '">' + (v ? esc(v) : '—') + '</td>';
+      }
+      function matches(row, q) {
+        if (!q) return true;
+        return ['name','email','first_name','last_name'].some(function (k) {
+          return (row[k] || '').toLowerCase().indexOf(q) !== -1;
+        });
+      }
+      function filtered(cfg) {
+        var q = (searchEl.value || '').trim().toLowerCase();
+        return (store[cfg.table] || []).filter(function (r) { return matches(r, q); });
+      }
+
+      function buildTabs() {
+        SECTIONS.forEach(function (cfg) {
+          var b = document.createElement('button');
+          b.className = 'tab-btn';
+          b.type = 'button';
+          b.innerHTML = cfg.title + ' <span class="tab-count" data-c>—</span>';
+          b.addEventListener('click', function () { setActive(cfg.table); });
+          tabsEl.appendChild(b);
+          cfg._tabBtn = b;
+          cfg._tabCount = b.querySelector('[data-c]');
+        });
+      }
+      function buildSection(cfg) {
+        var sec = document.createElement('section');
+        sec.className = 'adm-section';
+        sec.innerHTML =
+          '<div class="sec-head"><h2>' + cfg.title + '</h2><span class="sec-count"><b>—</b></span></div>' +
+          '<div class="table-wrap"><div class="table-scroll"><table>' +
+            '<thead><tr>' + cfg.cols.map(function (c) { return '<th>' + c[1] + '</th>'; }).join('') + '</tr></thead>' +
+            '<tbody><tr><td class="state" colspan="' + cfg.cols.length + '">Loading…</td></tr></tbody>' +
+          '</table></div></div>' +
+          '<div class="show-more-wrap" hidden><button class="show-more" type="button">Show more</button></div>';
+        host.appendChild(sec);
+        cfg._section = sec;
+        cfg._tbody = sec.querySelector('tbody');
+        cfg._count = sec.querySelector('.sec-count b');
+        cfg._moreWrap = sec.querySelector('.show-more-wrap');
+        cfg._moreBtn = sec.querySelector('.show-more');
+        cfg._limit = PAGE;
+        cfg._moreBtn.addEventListener('click', function () { cfg._limit += PAGE; renderSection(cfg); });
+      }
+      function renderSection(cfg) {
+        var rows = filtered(cfg);
+        if (cfg._count) cfg._count.textContent = rows.length;
+        if (cfg._tabCount) cfg._tabCount.textContent = rows.length;
+        if (cfg.table === active) updateTopCount();
+        if (!rows.length) {
+          var hasQuery = (searchEl.value || '').trim();
+          cfg._tbody.innerHTML = '<tr><td class="state" colspan="' + cfg.cols.length + '">' + esc(hasQuery ? 'No matches.' : cfg.empty) + '</td></tr>';
+          cfg._moreWrap.hidden = true;
+          return;
+        }
+        cfg._tbody.innerHTML = rows.slice(0, cfg._limit).map(function (r) {
+          return '<tr>' + cfg.cols.map(function (c) { return cell(r, c); }).join('') + '</tr>';
+        }).join('');
+        if (rows.length > cfg._limit) {
+          cfg._moreWrap.hidden = false;
+          cfg._moreBtn.textContent = 'Show more (' + (rows.length - cfg._limit) + ' more)';
+        } else {
+          cfg._moreWrap.hidden = true;
+        }
+      }
+      function setActive(table) {
+        active = table;
+        SECTIONS.forEach(function (cfg) {
+          var on = cfg.table === table;
+          cfg._section.hidden = !on;
+          cfg._tabBtn.classList.toggle('is-active', on);
+        });
+        updateTopCount();
+      }
+      function updateTopCount() {
+        var cfg = SECTIONS.filter(function (c) { return c.table === active; })[0];
+        if (!cfg) return;
+        if (totalEl) totalEl.textContent = filtered(cfg).length;
+        if (totalLabel) totalLabel.textContent = cfg.title.toLowerCase();
+      }
+      function onSearch() {
+        SECTIONS.forEach(function (cfg) { cfg._limit = PAGE; renderSection(cfg); });
+        updateTopCount();
+      }
+
+      buildTabs();
+      SECTIONS.forEach(buildSection);
+      setActive(active);
+      searchEl.addEventListener('input', onSearch);
+
+      if (!window.supabase || !window.supabase.createClient) {
+        SECTIONS.forEach(function (cfg) {
+          cfg._tbody.innerHTML = '<tr><td class="state error" colspan="' + cfg.cols.length + '">Could not load the Supabase client.</td></tr>';
+        });
+        return;
+      }
+      var client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      SECTIONS.forEach(function (cfg) {
+        client.from(cfg.table)
+          .select(cfg.cols.map(function (c) { return c[0]; }).join(','))
+          .order('created_at', { ascending: false })   // newest first
+          .then(function (res) {
+            if (res.error) {
+              cfg._tbody.innerHTML = '<tr><td class="state error" colspan="' + cfg.cols.length + '">' + esc(res.error.message) + '</td></tr>';
+              if (cfg._count) cfg._count.textContent = '0';
+              if (cfg._tabCount) cfg._tabCount.textContent = '0';
+              return;
+            }
+            store[cfg.table] = res.data || [];
+            renderSection(cfg);
+          });
+      });
+    })();
+  </script>
+
+</body>
+</html>
