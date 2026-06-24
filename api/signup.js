@@ -33,6 +33,7 @@ export default async function handler(req, res) {
   const name = String(body.name || '').trim();
   const email = String(body.email || '').trim().toLowerCase();
   const password = String(body.password || '');
+  const redirectTo = String(body.redirectTo || '').trim();
 
   if (!name || !email || !password) {
     return res.status(400).json({ ok: false, error: 'Name, email, and password are all required.' });
@@ -47,16 +48,38 @@ export default async function handler(req, res) {
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Save the name in Supabase user metadata via options.data.
+    // Save the name in user metadata; point the confirmation email link back to the site.
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { name } },
+      options: {
+        data: { name },
+        emailRedirectTo: redirectTo || undefined,
+      },
     });
 
     if (error) {
       console.error('Supabase signUp error:', error);
+      const m = (error.message || '').toLowerCase();
+      if (m.includes('already registered') || m.includes('already exists') || m.includes('already been registered')) {
+        return res.status(409).json({ ok: false, code: 'exists', error: 'You already have an account. Please sign in instead.' });
+      }
       return res.status(400).json({ ok: false, error: error.message || 'Could not create your account.' });
+    }
+
+    // With email confirmation on, Supabase returns an obfuscated user with an empty
+    // identities array when the email is already registered.
+    const u = data && data.user;
+    if (u && Array.isArray(u.identities) && u.identities.length === 0) {
+      return res.status(409).json({ ok: false, code: 'exists', error: 'You already have an account. Please sign in instead.' });
+    }
+
+    // Record the sign-up in the signups table (best-effort; don't fail signup on a logging error).
+    try {
+      const { error: recErr } = await supabase.from('signups').insert({ name, email });
+      if (recErr) console.error('signups record error:', recErr);
+    } catch (recEx) {
+      console.error('signups record exception:', recEx);
     }
 
     return res.status(200).json({

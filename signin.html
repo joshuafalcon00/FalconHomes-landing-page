@@ -356,7 +356,7 @@
 
         var url = signup ? '/api/signup' : '/api/signin';
         var payload = signup
-          ? { name: (nameInput ? nameInput.value.trim() : ''), email: email, password: password }
+          ? { name: (nameInput ? nameInput.value.trim() : ''), email: email, password: password, redirectTo: window.location.origin + '/' }
           : { email: email, password: password };
 
         fetch(url, {
@@ -371,7 +371,15 @@
           })
           .then(function (result) {
             if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origLabel; }
-            if (!result.ok) { throw new Error(result.data.error || 'Something went wrong. Please try again.'); }
+            if (!result.ok) {
+              showToast(result.data.error || 'Something went wrong. Please try again.', true);
+              if (result.data.code === 'exists') {
+                // Already registered: pop the message and switch them to Sign in.
+                setMode('signin');
+                var em = document.getElementById('email'); if (em) em.value = email;
+              }
+              return;
+            }
 
             if (signup) {
               showToast('Account created', false);
@@ -380,10 +388,11 @@
             } else {
               var nm = result.data.name ? (' ' + result.data.name) : '';
               showToast('Welcome' + nm, false);
-              if (result.data.lastSignInAt) {
-                showNote('Last seen: ' + formatDate(result.data.lastSignInAt));
-              }
+              showNote(result.data.lastSignInAt
+                ? ('Last seen: ' + formatDate(result.data.lastSignInAt) + ' · taking you home…')
+                : 'Signed in · taking you home…');
               form.reset();
+              setTimeout(function () { window.location.href = 'index.html'; }, 2200);
             }
           })
           .catch(function (err) {

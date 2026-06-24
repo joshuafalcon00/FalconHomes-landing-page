@@ -50,6 +50,14 @@ export default async function handler(req, res) {
     const meta = user.user_metadata || {};
     const name = meta.name || meta.full_name || '';
 
+    // Record the sign-in in the signin table (best-effort).
+    try {
+      const { error: recErr } = await supabase.from('signin').insert({ email });
+      if (recErr) console.error('signin record error:', recErr);
+    } catch (recEx) {
+      console.error('signin record exception:', recEx);
+    }
+
     return res.status(200).json({
       ok: true,
       name,
