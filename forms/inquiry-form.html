@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inquiry Form · Falcon Homes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    /* Set theme before paint to avoid flash */
+    (function () {
+      try {
+        var saved = localStorage.getItem('fh-theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --primary: #1F7A52;
+      --primary-bright: #2A9460;
+      --primary-dark: #155C3E;
+      --bg: #FFFFFF;
+      --surface: #FFFFFF;
+      --soft: #F4F8F5;
+      --soft-2: #EAF3EE;
+      --ink: #14241D;
+      --muted: #5C6F66;
+      --line: rgba(20,40,30,0.10);
+      --green-deep: #0B2A1E;
+      --glow: 0 4px 14px rgba(31,122,82,0.26);
+      --glow-strong: 0 8px 24px rgba(31,122,82,0.40);
+      --font-head: "Poppins", "Segoe UI", system-ui, sans-serif;
+      --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    }
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --primary: #2E8A63;
+      --primary-bright: #5CA585;
+      --primary-dark: #246B4D;
+      --bg: #0F1311;
+      --surface: #171D1A;
+      --soft: #131816;
+      --soft-2: #1C2420;
+      --ink: #ECF1EF;
+      --muted: #9AA7A1;
+      --line: rgba(255,255,255,0.12);
+      --green-deep: #0A0E0C;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--ink);
+      background: var(--soft);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      padding: 32px 18px 64px;
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+    .wrap { max-width: 720px; margin: 0 auto; }
+
+    .form-head { text-align: center; margin: 8px 0 28px; }
+    .eyebrow {
+      display: inline-block; font-family: var(--font-head); font-weight: 600;
+      font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--primary); margin-bottom: 10px;
+    }
+    .form-head h1 {
+      font-family: var(--font-display); font-weight: 600;
+      font-size: clamp(1.7rem, 4vw, 2.4rem); margin: 0 0 8px; line-height: 1.15;
+    }
+    .form-head p { color: var(--muted); margin: 0; }
+
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: clamp(20px, 4vw, 36px);
+      box-shadow: 0 1px 2px rgba(20,40,30,0.04), 0 12px 32px rgba(20,40,30,0.06);
+    }
+
+    .form-block { margin-bottom: 28px; }
+    .form-block:last-of-type { margin-bottom: 8px; }
+    .form-block h2 {
+      font-family: var(--font-head); font-weight: 600; font-size: 1.05rem;
+      margin: 0 0 2px;
+    }
+    .hint { color: var(--muted); font-size: 0.9rem; margin: 0 0 16px; }
+
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+
+    label { font-family: var(--font-head); font-weight: 500; font-size: 0.86rem; }
+    .req { color: var(--primary); }
+
+    input, select, textarea {
+      font-family: var(--font-body); font-size: 0.96rem; color: var(--ink);
+      background: var(--bg); border: 1px solid var(--line); border-radius: 11px;
+      padding: 11px 13px; min-height: 44px; width: 100%; transition: border-color .15s, box-shadow .15s;
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.7; }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(31,122,82,0.18);
+    }
+    input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible {
+      outline: 2px solid var(--primary); outline-offset: 2px;
+    }
+
+    .consent {
+      display: flex; gap: 11px; align-items: flex-start;
+      background: var(--soft-2); border: 1px solid var(--line); border-radius: 12px;
+      padding: 14px 16px; margin: 4px 0 22px; font-size: 0.92rem; cursor: pointer;
+    }
+    .consent input { width: 18px; height: 18px; min-height: 0; margin-top: 2px; flex: 0 0 auto; accent-color: var(--primary); }
+
+    .form-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn {
+      font-family: var(--font-head); font-weight: 600; font-size: 0.96rem;
+      color: #fff; background: var(--primary); border: 1px solid var(--primary);
+      border-radius: 12px; padding: 12px 22px; min-height: 44px; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+      box-shadow: var(--glow); transition: background .15s, box-shadow .15s, transform .1s;
+    }
+    .btn:hover { background: var(--primary-bright); box-shadow: var(--glow-strong); }
+    .btn:active { transform: translateY(1px); }
+    .btn-ghost {
+      color: var(--primary); background: transparent; border-color: var(--line); box-shadow: none;
+    }
+    .btn-ghost:hover { background: var(--soft-2); box-shadow: none; }
+
+    .hidden { display: none !important; }
+
+    .confirm { text-align: center; }
+    .confirm .check {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--soft-2); color: var(--primary); margin-bottom: 14px;
+    }
+    .confirm h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.5rem; margin: 0 0 8px; }
+    .confirm p { color: var(--muted); margin: 0 0 20px; }
+
+    .foot-note { text-align: center; color: var(--muted); font-size: 0.82rem; margin-top: 20px; }
+    .foot-note a { color: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="form-head">
+      <span class="eyebrow">Falcon Homes</span>
+      <h1>Inquire about a home</h1>
+      <p>Tell us a little about you and we'll set up your visit at Falcon Ridge.</p>
+    </div>
+
+    <!--
+      Standalone, reusable inquiry form. Self-contained: no external CSS/JS deps
+      beyond Google Fonts. Front-end only for now (no backend) — see the submit
+      handler note below. To embed elsewhere, copy the <form> + the submit script.
+    -->
+    <form class="form-card" id="inquiryForm" novalidate>
+      <div class="form-block">
+        <h2>Your details</h2>
+        <p class="hint">So we know who to reach out to.</p>
+        <div class="form-grid">
+          <div class="field">
+            <label for="firstName">First name <span class="req">*</span></label>
+            <input id="firstName" name="firstName" type="text" placeholder="Maria" required />
+          </div>
+          <div class="field">
+            <label for="lastName">Last name <span class="req">*</span></label>
+            <input id="lastName" name="lastName" type="text" placeholder="Santos" required />
+          </div>
+          <div class="field">
+            <label for="email">Email <span class="req">*</span></label>
+            <input id="email" name="email" type="email" placeholder="maria@email.com" required />
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" placeholder="+1 (000) 000-0000" />
+          </div>
+          <div class="field full">
+            <label for="contactMethod">Preferred contact</label>
+            <select id="contactMethod" name="contactMethod">
+              <option>Email</option>
+              <option>Phone call</option>
+              <option>Text message</option>
+              <option>Either is fine</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-block">
+        <h2>What you're looking for</h2>
+        <p class="hint">Tell us the home that caught your eye, and what fits your family.</p>
+        <div class="form-grid">
+          <div class="field full">
+            <label for="prefHome">Preferred home</label>
+            <select id="prefHome" name="prefHome">
+              <option value="">I'm not sure yet</option>
+              <option value="1">The Aspen · Modern Minimalist</option>
+              <option value="2">The Willow · Classic Bungalow</option>
+              <option value="3">The Magnolia · Two-Storey</option>
+              <option value="4">The Sienna · Mediterranean Villa</option>
+              <option value="5">The Cedar · Craftsman Cottage</option>
+              <option value="6">The Linden · Contemporary Townhouse</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="phase">Preferred phase</label>
+            <select id="phase" name="phase">
+              <option>Any phase</option>
+              <option>Falcon Ridge · Phase 1</option>
+              <option>Falcon Ridge · Phase 2</option>
+              <option>Falcon Ridge · Phase 3</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="beds">Bedrooms</label>
+            <select id="beds" name="beds">
+              <option>Any</option><option>1+</option><option>2+</option><option>3+</option><option>4+</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="budget">Budget range</label>
+            <select id="budget" name="budget">
+              <option>No preference</option>
+              <option>Under $250,000</option>
+              <option>$250,000 to $350,000</option>
+              <option>$350,000 to $450,000</option>
+              <option>$450,000+</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="timeframe">Move-in timeframe</label>
+            <select id="timeframe" name="timeframe">
+              <option>As soon as possible</option>
+              <option>1 to 3 months</option>
+              <option>3 to 6 months</option>
+              <option>6 months or more</option>
+              <option>Just exploring</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-block">
+        <h2>Visit and notes</h2>
+        <p class="hint">Optional, but it helps us prepare.</p>
+        <div class="form-grid">
+          <div class="field">
+            <label for="visitDate">Preferred visit date</label>
+            <input id="visitDate" name="visitDate" type="date" />
+          </div>
+          <div class="field full">
+            <label for="notes">Anything else?</label>
+            <textarea id="notes" name="notes" placeholder="Questions, must-haves, or anything we should know."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <label class="consent">
+        <input type="checkbox" id="consent" name="consent" required />
+        <span>I'd like a Falcon Homes advisor to contact me about Falcon Ridge homes.</span>
+      </label>
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Submit my details</button>
+        <a class="btn btn-ghost" href="../index.html#listings">Back to listings</a>
+      </div>
+    </form>
+
+    <div class="form-card confirm hidden" id="confirmCard">
+      <span class="check">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </span>
+      <h2 id="confirmTitle">Thanks, we've got your details</h2>
+      <p id="confirmBody">A Falcon Homes advisor will be in touch shortly to set up your visit.</p>
+      <a class="btn" href="../index.html#listings">Browse more homes</a>
+    </div>
+
+    <p class="foot-note">Prefer to talk? Visit the <a href="../inquire.html">full inquiry page</a> or the <a href="../index.html">homepage</a>.</p>
+
+  </div>
+
+  <script>
+    (function () {
+      var form = document.getElementById('inquiryForm');
+      var confirmCard = document.getElementById('confirmCard');
+      var confirmBody = document.getElementById('confirmBody');
+      var prefHome = document.getElementById('prefHome');
+      if (!form) return;
+
+      /* Pre-fill from query string: ?lot=N&phase=...&beds=...&budget=... */
+      var params = new URLSearchParams(window.location.search);
+      var lot = params.get('lot');
+      if (lot && prefHome) { prefHome.value = lot; }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+
+        /* NOTE: front-end only — submissions are not yet sent anywhere.
+           To deliver leads, POST the form data to a server endpoint here
+           (never expose API keys in this client JS — keep them server-side). */
+        var name = document.getElementById('firstName').value.trim();
+        var home = prefHome.value ? prefHome.options[prefHome.selectedIndex].text : null;
+        confirmBody.textContent = (name ? name + ', a' : 'A') + ' Falcon Homes advisor will be in touch shortly'
+          + (home ? ' about ' + home : '') + ' to set up your visit.';
+        form.classList.add('hidden');
+        confirmCard.classList.remove('hidden');
+        confirmCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    })();
+  </script>
+</body>
+</html>

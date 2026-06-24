@@ -4,7 +4,7 @@ Static marketing site for Falcon Homes, a house-and-lot builder in the Falcon Ri
 
 ## Pages
 - `index.html` — homepage / product page: header, hero (fixed `VIDEO.mp4` background, autoplay+muted+loop+playsinline), working property search (filters the listings + scrolls), 6 numbered home listings with AI-generated house photos, interactive "Find Your Lot" SVG site map (lot thumbnails reuse the same photos), browse-by-style, About callout, footer/contact.
-- `aboutfalco.html` — About page. Background is the seasonal video as a fixed, scroll-scrubbed frame sequence (`day2_video/frames/`, ~60 frames); content scrolls over it and each section fades in/out. Sections: story, community, values (2x2), how-it-works steps, why-choose-us, CTA.
+- `aboutfalco.html` — About page. Background is a fixed, scroll-scrubbed frame sequence of the **continuous house walkthrough** (`frames/`, 361 frames `frame_0001..0361.jpg`, `N=361` in the inline script); content scrolls over it and each section fades in/out. The canvas cover-crop is centered (`fx/fy = 0.5`, no portrait zoom) so the house/hallways stay aligned on mobile. Sections: story, community, values (2x2), how-it-works steps, why-choose-us, CTA.
 - `inquire.html` — contact / inquiry page. Fixed `Family.mp4` background. Intake form (personal details + home preferences) that auto-fills home/phase/beds/budget from `?lot=N`, passed by each listing's "Inquire about this home" button.
 - `signin.html` — sign-in page (hero + sign-in form + CTA back home). Front-end only; submitting shows an "accounts coming soon → send an inquiry" message.
 - `before/before.html` — the original pre-Day-2 page, kept for reference (not linked).
@@ -26,10 +26,18 @@ Static marketing site for Falcon Homes, a house-and-lot builder in the Falcon Ri
 
 ## Stack & deploy
 - HTML, CSS, vanilla JavaScript. No framework.
-- kie.ai API via `KIE_API_KEY` in `.env` (server-side only — never expose in client JS; `.env` is git-ignored and never committed). Used via tooling to generate the house images and the seasonal video.
+- kie.ai API via `KIE_API_KEY` in `.env` (server-side only — never expose in client JS; `.env` is git-ignored and never committed). Used via tooling to generate the house images, the seasonal video, and the walkthrough video.
+- **Walkthrough video:** 15s, 16:9, single continuous POV take (no cuts) of the home, generated with kie.ai Kling 3.0 (`kling-3.0/video`, `multi_shots:false`, one `prompt`, `duration:15`, single anchor image = `brand_assets/Scene 2.jfif`, `mode:pro`). Saved to `brand_assets/Walkthrough.mp4` (heavy source, git-ignored). Frames for the About-page scroll background are extracted with ffmpeg (`-vf scale=1280:720 -q:v 3`, all 361 native frames) into `frames/`. Kling notes: `multi_shots` is required (true needs exactly one image; max 5 shots in `multi_prompt`, ≤15s total); moderation can flag prompts, so keep wording plain/neutral. The six `brand_assets/Scene N.jfif` stills are the walkthrough's visual reference.
 - **Live:** https://falconhomes-landing-page.vercel.app
 - **GitHub:** github.com/joshuafalcon00/FalconHomes-landing-page (branch `main`).
-- **Deploy steps:** `git push origin main`, then `NODE_OPTIONS=--use-system-ca vercel deploy --prod --yes`. The `--use-system-ca` flag is required on this machine (SSL interception); use `curl -k` to test the live URL. Excludes (`.gitignore` + `.vercelignore`): the 47 MB `day2_video/falcon_seasons.mp4`, `.agents/`, `.claude/`, scratch.
+- **Deploy steps:** `git push origin main`, then `NODE_OPTIONS=--use-system-ca vercel deploy --prod --yes`. The `--use-system-ca` flag is required on this machine (SSL interception); use `curl -k` to test the live URL. Excludes (`.gitignore` + `.vercelignore`): the heavy source videos `day2_video/falcon_seasons.mp4` and `brand_assets/Walkthrough.mp4` (the site uses extracted frames, not the mp4s), `.agents/`, `.claude/`, scratch. The `frames/` folder IS committed/deployed (the About page needs it).
+
+## Security rules (always)
+1. Never put API keys in frontend code (kie.ai key stays server-side only).
+2. Always create a `.gitignore` before the first commit.
+3. Turn on RLS (row-level security) for every database table.
+4. Never put security checks in the frontend.
+5. Never give an AI agent write access to production.
 
 ## Conventions
 - No em-dashes (—) in copy. Use commas/periods/colons, or "·" as a separator (e.g. "Falcon Ridge · Phase 1", "The Aspen · Modern Minimalist").
@@ -46,4 +54,7 @@ Static marketing site for Falcon Homes, a house-and-lot builder in the Falcon Ri
 - [x] Scroll-animation page (About) deployed and working
 - [x] `.env` git-ignored; kie.ai key never in GitHub history
 - [x] Live audit: 0 dead-link placeholders; all pages return 200
+- [x] Continuous POV walkthrough video generated (Kling 3.0, single take, 15s)
+- [x] About-page scroll background swapped to the walkthrough (361 frames) + mobile center-crop fix
+- [x] Published live (commit `a92a650`); home/about/frames all return 200 on production
 - [ ] Final confirmation on a physical phone (user to verify)

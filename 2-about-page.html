@@ -244,13 +244,6 @@
     .points li { position: relative; padding-left: 30px; margin-bottom: 12px; color: var(--ink); }
     .points li::before { content: "✓"; position: absolute; left: 0; top: 4px; color: #fff; background: var(--primary); width: 20px; height: 20px; border-radius: 50%; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; }
 
-    /* Why-choose reasons grid (logo removed, two-column check list) */
-    .why-points { max-width: 880px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 22px 44px; }
-    .why-points li { margin-bottom: 0; padding-left: 34px; }
-    .why-points li strong { display: block; font-family: var(--font-head); font-weight: 600; color: #8FE3B7; margin-bottom: 3px; }
-    [data-theme="dark"] .why-points li strong { color: #A6ECC9; }
-    @media (max-width: 640px) { .why-points { grid-template-columns: 1fr; gap: 18px; } }
-
     /* Steps (genuine sequence) */
     .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
     .step { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
@@ -431,19 +424,21 @@
 
   <!-- ============ WHY CHOOSE US ============ -->
   <section>
-    <div class="container">
-      <div class="section-head">
-        <span class="kicker">Why Falcon Homes</span>
+    <div class="container about about-grid">
+      <div>
         <h2>Why families choose Falcon Homes</h2>
-        <p>The reasons families pick Falcon Ridge, and stay glad they did.</p>
+        <ul class="points">
+          <li>Move-in ready homes, with keys handed over faster</li>
+          <li>Six distinct home styles within one trusted community</li>
+          <li>Every home tied to a real, numbered lot you can see on the map</li>
+          <li>Straightforward pricing and a process you can follow</li>
+          <li>One focused community means consistent quality and standards</li>
+        </ul>
       </div>
-      <ul class="points why-points">
-        <li><strong>Faster move-ins</strong>Move-in ready homes, with keys handed over faster than families expect.</li>
-        <li><strong>Six styles, one community</strong>Distinct home styles that share the same streets, standards, and care.</li>
-        <li><strong>A real lot, not just a floor plan</strong>Every home is tied to a numbered lot you can find on the map.</li>
-        <li><strong>Pricing you can follow</strong>Straightforward numbers and a process with no runaround.</li>
-        <li><strong>Consistent quality</strong>One focused community means the same dependable build, every time.</li>
-      </ul>
+      <div class="about-logo">
+        <img class="about-mark" src="brand_assets/logo.png" alt="Falcon Homes logo" />
+        <div class="wordmark about-wordmark"><span class="wm-falcon">Falcon</span><span class="wm-homes">Homes</span></div>
+      </div>
     </div>
   </section>
 
