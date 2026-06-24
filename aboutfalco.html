@@ -233,7 +233,7 @@
     .about-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 56px; align-items: center; }
     .about-logo { background: transparent; border: none; padding: 0; box-shadow: none; display: flex; flex-direction: column; align-items: center; gap: 18px; }
     .about-mark { width: 128px; height: 128px; object-fit: cover; object-position: left center; border-radius: 20px; filter: drop-shadow(0 0 12px rgba(31,122,82,0.3)); }
-    .about-wordmark { font-size: 2.7rem; line-height: 1; }
+    .about-wordmark { font-size: clamp(1.7rem, 9.5vw, 2.7rem); line-height: 1; max-width: 100%; }
     .about-wordmark .wm-falcon { color: #fff; }
     .about-wordmark .wm-homes { color: #8FE3B7; }
     [data-theme="dark"] .about-wordmark .wm-homes { color: var(--primary-bright); }
@@ -498,10 +498,10 @@
       var canvas = document.getElementById('bgSeq');
       if (!canvas) return;
       var ctx = canvas.getContext('2d');
-      var N = 60, frames = [], loaded = 0, cur = -1;
+      var N = 361, frames = [], loaded = 0, cur = -1;
       for (var i = 1; i <= N; i++) {
         var im = new Image();
-        im.src = 'day2_video/frames/frame_' + String(i).padStart(4, '0') + '.jpg';
+        im.src = 'frames/frame_' + String(i).padStart(4, '0') + '.jpg';
         im.onload = function () { loaded++; if (loaded <= 2) render(); };
         frames.push(im);
       }
@@ -516,13 +516,12 @@
       function drawCover(img) {
         var cw = canvas.width, ch = canvas.height, iw = img.naturalWidth, ih = img.naturalHeight;
         if (!iw || !ih) return;
-        var portrait = window.innerHeight >= window.innerWidth;
         var s = Math.max(cw / iw, ch / ih);
-        if (portrait) s *= 1.18;          // zoom in a touch on phones for room to recenter
         var dw = iw * s, dh = ih * s;
-        // Focal point: the front door (~46% across, ~55% down). Center it on mobile.
-        var fx = portrait ? 0.46 : 0.5;
-        var fy = portrait ? 0.55 : 0.5;
+        // Center the frame both ways: the house facade and the hallways sit dead-center,
+        // so a straight center crop keeps them aligned on portrait phones.
+        var fx = 0.5;
+        var fy = 0.5;
         var dx = cw * 0.5 - fx * dw, dy = ch * 0.5 - fy * dh;
         dx = Math.min(0, Math.max(cw - dw, dx));   // clamp so no empty edges show
         dy = Math.min(0, Math.max(ch - dh, dy));
