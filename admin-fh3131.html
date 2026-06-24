@@ -149,6 +149,21 @@
     .toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 16px); z-index: 210; background: var(--primary-dark); color: #fff; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 0.92rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
     .toast.show { opacity: 1; transform: translate(-50%, 0); }
     .toast.error { background: #c0392b; }
+
+    /* Full-page admin gate */
+    .admin-gate { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 22px; background: linear-gradient(180deg, rgba(5,20,14,0.94) 0%, rgba(5,20,14,0.97) 100%); }
+    .admin-gate[hidden] { display: none; }
+    .gate-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 34px 28px 28px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,0.45); }
+    .gate-logo { width: 50px; height: 50px; display: block; margin: 0 auto 14px; }
+    .gate-card h2 { font-size: 1.3rem; color: var(--ink); margin-bottom: 6px; }
+    .gate-card p { color: var(--muted); font-size: 0.92rem; margin-bottom: 18px; }
+    .gate-card form { display: flex; flex-direction: column; gap: 10px; }
+    .gate-card input { background: var(--bg); border: 1px solid var(--line); color: var(--ink); padding: 12px 14px; border-radius: 9px; font-size: 0.95rem; font-family: inherit; }
+    .gate-card input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(31,122,82,0.12); }
+    .gate-card button { background: var(--primary); color: #fff; border: none; padding: 12px; border-radius: 9px; font-weight: 600; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
+    .gate-card button:hover { background: var(--primary-bright); }
+    .gate-card button[disabled] { opacity: 0.6; cursor: default; }
+    .gate-error { color: #e8897e; font-size: 0.88rem; margin-top: 12px; min-height: 1em; }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
 </head>
@@ -158,6 +173,20 @@
     <source src="brand_assets/VIDEO.mp4" type="video/mp4" />
   </video>
   <div class="bg-overlay"></div>
+
+  <!-- Full-page password gate: nothing loads until the admin password is verified server-side -->
+  <div class="admin-gate" id="adminGate">
+    <div class="gate-card">
+      <img class="brand-logo gate-logo" src="brand_assets/logo.png" alt="Falcon Homes logo" />
+      <h2>Admin access</h2>
+      <p>Enter the admin password to view submissions.</p>
+      <form id="gateForm">
+        <input id="gatePw" type="password" placeholder="Admin password" autocomplete="current-password" aria-label="Admin password" />
+        <button type="submit" id="gateBtn">Unlock</button>
+      </form>
+      <div class="gate-error" id="gateError" role="alert"></div>
+    </div>
+  </div>
 
   <header class="site">
     <div class="container nav">
@@ -458,45 +487,90 @@
           .catch(function () { toast('Network error. Could not delete.', true); btnYes.disabled = false; btnYes.textContent = 'Yes, delete'; });
       });
 
-      buildTabs();
-      SECTIONS.forEach(buildSection);
+      // The dashboard only initializes AFTER the admin password is verified.
+      var dashStarted = false;
+      function initDashboard() {
+        if (dashStarted) return;
+        dashStarted = true;
 
-      // Delegated click handler for the Delete buttons in the Accounts table.
-      var accountsCfg = SECTIONS.filter(function (c) { return c.kind === 'accounts'; })[0];
-      if (accountsCfg) accountsCfg._tbody.addEventListener('click', function (e) {
-        var btn = e.target.closest && e.target.closest('button[data-del]');
-        if (!btn) return;
-        openConfirm(btn.getAttribute('data-del'), btn.getAttribute('data-email'), accountsCfg);
-      });
+        buildTabs();
+        SECTIONS.forEach(buildSection);
 
-      setActive(active);
-      searchEl.addEventListener('input', onSearch);
-
-      if (!window.supabase || !window.supabase.createClient) {
-        SECTIONS.forEach(function (cfg) {
-          if (cfg.kind === 'accounts') return;
-          cfg._tbody.innerHTML = '<tr><td class="state error" colspan="' + cfg.cols.length + '">Could not load the Supabase client.</td></tr>';
+        // Delegated click handler for the Delete buttons in the Accounts table.
+        var accountsCfg = SECTIONS.filter(function (c) { return c.kind === 'accounts'; })[0];
+        if (accountsCfg) accountsCfg._tbody.addEventListener('click', function (e) {
+          var btn = e.target.closest && e.target.closest('button[data-del]');
+          if (!btn) return;
+          openConfirm(btn.getAttribute('data-del'), btn.getAttribute('data-email'), accountsCfg);
         });
-        return;
-      }
-      var client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      SECTIONS.forEach(function (cfg) {
-        if (cfg.kind === 'accounts') return;   // accounts come from the serverless function, not the anon client
-        client.from(cfg.table)
-          .select(cfg.cols.map(function (c) { return c[0]; }).join(','))
-          .order('created_at', { ascending: false })   // newest first
-          .then(function (res) {
-            if (res.error) {
-              cfg._tbody.innerHTML = '<tr><td class="state error" colspan="' + cfg.cols.length + '">' + esc(res.error.message) + '</td></tr>';
-              if (cfg._count) cfg._count.textContent = '0';
-              if (cfg._tabCount) cfg._tabCount.textContent = '0';
-              return;
-            }
-            store[cfg.table] = res.data || [];
-            renderSection(cfg);
+        setActive(active);
+        searchEl.addEventListener('input', onSearch);
+
+        if (!window.supabase || !window.supabase.createClient) {
+          SECTIONS.forEach(function (cfg) {
+            if (cfg.kind === 'accounts') return;
+            cfg._tbody.innerHTML = '<tr><td class="state error" colspan="' + cfg.cols.length + '">Could not load the Supabase client.</td></tr>';
           });
+          return;
+        }
+        var client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        SECTIONS.forEach(function (cfg) {
+          if (cfg.kind === 'accounts') return;   // accounts come from the serverless function, not the anon client
+          client.from(cfg.table)
+            .select(cfg.cols.map(function (c) { return c[0]; }).join(','))
+            .order('created_at', { ascending: false })   // newest first
+            .then(function (res) {
+              if (res.error) {
+                cfg._tbody.innerHTML = '<tr><td class="state error" colspan="' + cfg.cols.length + '">' + esc(res.error.message) + '</td></tr>';
+                if (cfg._count) cfg._count.textContent = '0';
+                if (cfg._tabCount) cfg._tabCount.textContent = '0';
+                return;
+              }
+              store[cfg.table] = res.data || [];
+              renderSection(cfg);
+            });
+        });
+      }
+
+      /* ---- Full-page password gate (verifies against the server before anything loads) ---- */
+      var gate = document.getElementById('adminGate');
+      var gateForm = document.getElementById('gateForm');
+      var gatePw = document.getElementById('gatePw');
+      var gateBtn = document.getElementById('gateBtn');
+      var gateError = document.getElementById('gateError');
+
+      function unlock() { if (gate) gate.hidden = true; initDashboard(); }
+      function verifyPw(pw) {
+        return fetch('/api/admin-users', { headers: { 'x-admin-secret': pw } })
+          .then(function (r) { return r.status; });
+      }
+      if (gateForm) gateForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var pw = gatePw.value;
+        if (!pw) { gateError.textContent = 'Please enter the password.'; return; }
+        gateBtn.disabled = true; gateBtn.textContent = 'Checking…'; gateError.textContent = '';
+        verifyPw(pw).then(function (status) {
+          gateBtn.disabled = false; gateBtn.textContent = 'Unlock';
+          if (status === 200) { sessionStorage.setItem('fh-admin-secret', pw); gatePw.value = ''; unlock(); }
+          else if (status === 401) { gateError.textContent = 'Wrong password.'; }
+          else if (status === 503) { gateError.textContent = 'Admin is not configured on the server.'; }
+          else { gateError.textContent = 'Could not reach the server (status ' + status + ').'; }
+        }).catch(function () {
+          gateBtn.disabled = false; gateBtn.textContent = 'Unlock';
+          gateError.textContent = 'Network error. The admin API only runs on the deployed site.';
+        });
       });
+      // If already unlocked this session, verify silently and skip the gate.
+      (function () {
+        var saved = sessionStorage.getItem('fh-admin-secret');
+        if (!saved) return;
+        verifyPw(saved).then(function (status) {
+          if (status === 200) unlock();
+          else sessionStorage.removeItem('fh-admin-secret');
+        }).catch(function () {});
+      })();
     })();
   </script>
 
